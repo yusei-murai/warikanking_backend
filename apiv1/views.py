@@ -1,11 +1,12 @@
 from rest_framework import status, views  
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated  
+from rest_framework.permissions import IsAuthenticated 
 from core.use_cases.create_event import CreateEvent
+from serializers.event_serializers import EventSerializer
 import uuid
 
 class CreateEventAPIView(views.APIView):
-    permission_classes = [IsAuthenticated] 
+    #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         usecase = CreateEvent()
         data = request.data
@@ -15,6 +16,8 @@ class CreateEventAPIView(views.APIView):
             total=int(data['total']),
             number_people=int(data['number_people']),
             user_ids=list(data['user_ids'])
-            )
+        )
+
+        serializer = EventSerializer(result)
         
-        return Response(result, status.HTTP_201_CREATED)
+        return Response(serializer.data, status.HTTP_201_CREATED)

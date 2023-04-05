@@ -5,7 +5,7 @@ from . import views
 app_name = 'apiv1'  
 
 urlpatterns = [
-    path('create-event/', views.CreateEventAPIView, "create-event"),  
+    path('create-event/', views.CreateEventAPIView.as_view(), name="create-event"),  
     ] 
 
  
