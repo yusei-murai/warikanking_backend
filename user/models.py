@@ -37,8 +37,6 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     email = models.EmailField("メールアドレス", max_length=255, unique=True)

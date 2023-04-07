@@ -9,12 +9,14 @@ class CreateEvent:
         users=[]
 
         event = Event(
-            id=uuid.uuid4,
+            id=uuid.uuid4(),
             name=name,
             total=total,
             number_people=number_people
         )
+
         for user_id in user_ids:
+            a = IUserRepository.get_by_id(id=user_id)
             users.append(IUserRepository.get_by_id(id=user_id))
         
         result = IEventRepository.create(event=event)

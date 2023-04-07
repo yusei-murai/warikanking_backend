@@ -8,7 +8,6 @@ from user.models import User as UserModel
 from core.i_repositories.i_event_repository import IEventRepository
 
 class EventRepository(IEventRepository):
-    @classmethod
     def create(cls, event: Event) -> Event:
         result = EventModel.objects.create(
             id = event.id,
