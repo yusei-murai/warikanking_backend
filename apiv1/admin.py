@@ -3,7 +3,10 @@ from user.models import User
 from event.models import Event
 from pay.models import Pay
 
-admin.site.register(User)
+class UserAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+
+admin.site.register(User,UserAdmin)
 admin.site.register(Event)
 admin.site.register(Pay)
 

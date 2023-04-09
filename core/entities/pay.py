@@ -14,7 +14,7 @@ class Pay:
         return Pay(
             id = uuid.UUID(str(pay_model.id)),
             name = pay_model.name,
-            event_id = uuid.UUID(str(pay_model.event_id)),
-            user_id = uuid.UUID(str(pay_model.user_id)),
+            event_id = uuid.UUID(pay_model.event_id),
+            user_id = uuid.UUID(pay_model.user_id),
             amount_pay = pay_model.amount_pay
         )

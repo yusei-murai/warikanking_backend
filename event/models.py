@@ -7,7 +7,7 @@ class Event(models.Model):
     name = models.CharField("イベント名", max_length=255,null=False)
     total = models.IntegerField("合計金額",default=0,null=False)
     number_people = models.IntegerField("合計金額",default=0,null=False)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField("user.User")
 
     def __str__(self):
         return self.title
