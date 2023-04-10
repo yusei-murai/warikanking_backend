@@ -10,4 +10,4 @@ class Event(models.Model):
     users = models.ManyToManyField("user.User")
 
     def __str__(self):
-        return self.title
+        return self.name

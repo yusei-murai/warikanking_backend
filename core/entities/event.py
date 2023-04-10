@@ -12,7 +12,7 @@ class Event:
     @classmethod
     def from_django_model(cls, event_model: EventModel):
         return Event(
-            id = uuid.UUID(str(event_model.id)),
+            id = event_model.id,
             name = event_model.name,
             total = event_model.total,
             number_people = event_model.number_people

@@ -3,12 +3,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
 from core.use_cases.create_event import CreateEvent
 from serializers.event_serializers import EventSerializer
+from core.i_repositories.i_event_repository import IEventRepository
+from core.i_repositories.i_user_repository import IUserRepository
+from repositories.event_repository import EventRepository
+from repositories.user_repository import UserRepository
+
+
 import uuid
 
 class CreateEventAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
-        usecase = CreateEvent()
+        usecase = CreateEvent(EventRepository, UserRepository)
         data = request.data
 
         result = usecase.create_event(
