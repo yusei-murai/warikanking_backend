@@ -1,5 +1,5 @@
 import uuid
-from event.models import Pay as PayModel
+from pay.models import Pay as PayModel
 
 class Pay:
     def __init__(self, id: uuid.UUID, name: str, event_id: uuid.UUID, user_id: uuid.UUID, amount_pay: int):
@@ -14,7 +14,7 @@ class Pay:
         return Pay(
             id = uuid.UUID(str(pay_model.id)),
             name = pay_model.name,
-            event_id = uuid.UUID(pay_model.event_id),
+            event_id = pay_model.event.id,
             user_id = uuid.UUID(pay_model.user_id),
             amount_pay = pay_model.amount_pay
         )
