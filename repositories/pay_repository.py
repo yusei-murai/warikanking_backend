@@ -10,7 +10,6 @@ from core.i_repositories.i_pay_repository import IPayRepository
 class PayRepository(IPayRepository):
     def create(self, pay: Pay) -> Optional[Pay]:
         try:
-            print(pay.event_id)
             result = PayModel.objects.create(
                 id = pay.id,
                 name = pay.name,

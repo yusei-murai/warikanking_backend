@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
-from serializers.event_serializers import EventSerializer
-from serializers.pay_serializers import PaySerializer
+from serializers.event_serializers import EventSerializer,RequestEventSerializer
+from serializers.pay_serializers import PaySerializer,RequestPaySerializer
 from repositories.event_repository import EventRepository
 from repositories.user_repository import UserRepository
 from repositories.pay_repository import PayRepository
@@ -21,11 +21,15 @@ class CreateEventAPIView(views.APIView):
         usecase = CreateEvent(event_repo, user_repo)
         data = request.data
 
+        serializer = RequestEventSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
         result = usecase.create_event(
-            name=data['name'],
-            total=int(data['total']),
-            number_people=int(data['number_people']),
-            user_ids=list(data['user_ids'])
+            name=validated_data['name'],
+            total=int(validated_data['total']),
+            number_people=int(validated_data['number_people']),
+            user_ids=list(validated_data['user_ids'])
         )
 
         serializer = EventSerializer(result)
@@ -40,11 +44,15 @@ class CreatePayAPIView(views.APIView):
         usecase = CreatePay(pay_repo)
         data = request.data
 
+        serializer = RequestPaySerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
         result = usecase.create_pay(
-            name=data['name'],
-            event_id=data['event_id'],
-            user_id=data['user_id'],
-            amount_pay=int(data['amount_pay']),
+            name=validated_data['name'],
+            event_id=validated_data['event_id'],
+            user_id=validated_data['user_id'],
+            amount_pay=int(validated_data['amount_pay']),
         )
 
         serializer = PaySerializer(result)
