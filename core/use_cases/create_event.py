@@ -19,8 +19,7 @@ class CreateEvent:
             number_people=number_people
         )
 
-        for user_id in user_ids:
-            users.append(self.user_repo.get_by_id(id=user_id))
+        users = [self.user_repo.get_by_id(id=user_id) for user_id in user_ids]
 
         result = self.event_repo.create(event=event)
         self.event_repo.add_users_to_event(event=event,users=users)
