@@ -60,8 +60,8 @@ class PayRepository(IPayRepository):
             result = []
             results = PayModel.objects.filter(user_id=user_id)
 
-            for i in results:
-                result.append(Pay.from_django_model(i))
+            result = [Pay.from_django_model(i) for i in results]
+
             return result
         
         except EventModel.DoesNotExist:
@@ -72,8 +72,8 @@ class PayRepository(IPayRepository):
             result = []
             results = PayModel.objects.filter(event__id=event_id)
 
-            for i in results:
-                result.append(Pay.from_django_model(i))
+            result = [Pay.from_django_model(i) for i in results]
+
             return result
         
         except EventModel.DoesNotExist:
