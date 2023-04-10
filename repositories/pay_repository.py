@@ -27,7 +27,7 @@ class PayRepository(IPayRepository):
         try:
             result = PayModel.objects.get(id=id)
             result.name = pay.name
-            result.user_id = pay.user_id
+            result.user = UserModel.objects.get(id=pay.user_id),
             result.event = EventModel.objects.get(id=pay.event_id),
             result.amount_pay = pay.amount_pay
             result.save()
@@ -58,7 +58,7 @@ class PayRepository(IPayRepository):
     def get_by_user_id(self, user_id: uuid.UUID) -> Optional[list]:
         try:
             result = []
-            results = PayModel.objects.filter(user_id=user_id)
+            results = PayModel.objects.filter(user__id=user_id)
 
             result = [Pay.from_django_model(i) for i in results]
 
