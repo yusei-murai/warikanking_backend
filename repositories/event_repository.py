@@ -2,7 +2,6 @@ import uuid
 from typing import Optional
 
 from core.entities.event import Event
-from core.entities.user import User
 from event.models import Event as EventModel
 from user.models import User as UserModel
 from core.i_repositories.i_event_repository import IEventRepository
