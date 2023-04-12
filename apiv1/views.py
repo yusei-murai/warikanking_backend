@@ -64,6 +64,7 @@ class GetEventsAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
+        
 
         usecase = GetEvents(event_repo)
         data = request.data
