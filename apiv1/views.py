@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
-from serializers.event_serializers import EventSerializer,RequestEventSerializer
+from core.use_cases.get_events import GetEvents
+from serializers.event_serializers import EventSerializer,RequestEventSerializer,GetRequestEventSerializer
 from serializers.pay_serializers import PaySerializer,RequestPaySerializer
 from repositories.event_repository import EventRepository
 from repositories.user_repository import UserRepository
@@ -58,3 +59,20 @@ class CreatePayAPIView(views.APIView):
         serializer = PaySerializer(result)
         
         return Response(serializer.data, status.HTTP_201_CREATED)
+    
+class GetEventsAPIView(views.APIView):
+    #permission_classes = [IsAuthenticated] 
+    def get(self, request, *args, **kwargs):
+        event_repo: IEventRepository = EventRepository()
+
+        usecase = GetEvents(event_repo)
+        data = request.data
+
+        serializer = GetRequestEventSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        result = usecase.get_events(validated_data['user_id'])
+        serializer = PaySerializer(result)
+        
+        return Response(serializer.data, status.HTTP_200_OK)

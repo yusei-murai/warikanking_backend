@@ -7,6 +7,9 @@ class RequestEventSerializer(serializers.Serializer):
     number_people = serializers.IntegerField()
     user_ids = serializers.ListField(child=serializers.UUIDField())
 
+class GetRequestEventSerializer(serializers.Serializer):
+    user_id = serializers.UUIDField()
+
 class EventSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255)
