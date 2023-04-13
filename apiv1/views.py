@@ -72,10 +72,8 @@ class GetEventsAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        #get_eventsはリスとで返す.インクリメントするように修正
-
         result = usecase.get_events(validated_data['user_id'])
-        print(result)
+        print(result[0].name)
         serializer = EventSerializer(result)
         
         return Response(serializer.data, status.HTTP_200_OK)

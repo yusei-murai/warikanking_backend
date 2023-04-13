@@ -54,8 +54,9 @@ class EventRepository(IEventRepository):
     def get_by_user_id(self, user_id: uuid.UUID) -> Optional[Event]:
         try:
             user = UserModel.objects.get(id=user_id)
-            result = user.event_set.all()
-            return Event.from_django_model(result)
+            django_result = user.event_set.all()
+            result = [Event.from_django_model(i) for i in django_result]
+            return result
         
         except EventModel.DoesNotExist:
             return None
