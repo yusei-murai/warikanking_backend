@@ -1,3 +1,4 @@
+import json
 from rest_framework import status, views  
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
@@ -72,8 +73,7 @@ class GetEventsAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        result = usecase.get_events(validated_data['user_id'])
-        print(result[0].name)
-        serializer = EventSerializer(result)
+        results = usecase.get_events(validated_data['user_id'])
+        result = [EventSerializer(i).data for i in results]
         
-        return Response(serializer.data, status.HTTP_200_OK)
+        return Response(result, status.HTTP_200_OK)
