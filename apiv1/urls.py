@@ -6,7 +6,8 @@ app_name = 'apiv1'
 
 urlpatterns = [
     path('create-event/', views.CreateEventAPIView.as_view(), name="create-event"), 
-    path('create-pay/', views.CreatePayAPIView.as_view(), name="create-pay"),  
+    path('create-pay/', views.CreatePayAPIView.as_view(), name="create-pay"), 
+    path('get-events/', views.GetEventsAPIView.as_view(), name="get-events"),
     ] 
 
  

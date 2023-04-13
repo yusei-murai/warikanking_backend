@@ -64,7 +64,6 @@ class GetEventsAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
-        
 
         usecase = GetEvents(event_repo)
         data = request.data
@@ -73,7 +72,10 @@ class GetEventsAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
+        #get_eventsはリスとで返す.インクリメントするように修正
+
         result = usecase.get_events(validated_data['user_id'])
-        serializer = PaySerializer(result)
+        print(result)
+        serializer = EventSerializer(result)
         
         return Response(serializer.data, status.HTTP_200_OK)
