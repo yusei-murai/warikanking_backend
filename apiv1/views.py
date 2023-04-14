@@ -2,6 +2,7 @@ import json
 from rest_framework import status, views  
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
+from rest_framework.throttling import ScopedRateThrottle
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
 from core.use_cases.get_events import GetEvents
@@ -14,7 +15,13 @@ from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository
 from core.i_repositories.i_pay_repository import IPayRepository
 
+class RateThrottel(ScopedRateThrottle):
+    THROTTLE_RATES = {
+        'hoge_create': '1/second',
+    }
+
 class CreateEventAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
@@ -30,7 +37,6 @@ class CreateEventAPIView(views.APIView):
         result = usecase.create_event(
             name=validated_data['name'],
             total=int(validated_data['total']),
-            number_people=int(validated_data['number_people']),
             user_ids=list(validated_data['user_ids'])
         )
 
@@ -39,6 +45,7 @@ class CreateEventAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
     
 class CreatePayAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         pay_repo: IPayRepository = PayRepository()
@@ -62,6 +69,7 @@ class CreatePayAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
     
 class GetEventsAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()

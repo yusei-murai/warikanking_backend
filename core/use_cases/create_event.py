@@ -9,19 +9,20 @@ class CreateEvent:
         self.event_repo = event_repo
         self.user_repo = user_repo
 
-    def create_event(self,name: str,total: int,number_people: int,user_ids: list):
+    def create_event(self,name: str,total: int,user_ids: list):
         users=[]
 
         event = Event(
             id=uuid.uuid4(),
             name=name,
             total=total,
-            number_people=number_people
+            number_people=len(user_ids)
         )
 
         users = [self.user_repo.get_by_id(id=user_id) for user_id in user_ids]
 
         result = self.event_repo.create(event=event)
+
         self.event_repo.add_users_to_event(event=event,users=users)
 
         return result
