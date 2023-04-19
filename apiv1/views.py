@@ -6,8 +6,9 @@ from rest_framework.throttling import ScopedRateThrottle
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
 from core.use_cases.get_events import GetEvents
+from core.use_cases.get_pays import GetPays
 from serializers.event_serializers import EventSerializer,RequestEventSerializer,GetRequestEventSerializer
-from serializers.pay_serializers import PaySerializer,RequestPaySerializer
+from serializers.pay_serializers import PaySerializer,RequestPaySerializer,GetRequestPaySerializer
 from repositories.event_repository import EventRepository
 from repositories.user_repository import UserRepository
 from repositories.pay_repository import PayRepository
@@ -84,5 +85,22 @@ class GetEventsAPIView(views.APIView):
 
         results = usecase.get_events(validated_data['user_id'])
         result = [EventSerializer(i).data for i in results]
+        
+        return Response(result, status.HTTP_200_OK)
+    
+class GetPaysAPIView(views.APIView):
+    #permission_classes = [IsAuthenticated] 
+    def get(self, request, *args, **kwargs):
+        pay_repo: IPayRepository = PayRepository()
+
+        usecase = GetPays(pay_repo)
+        data = request.data
+
+        serializer = GetRequestPaySerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        results = usecase.get_pays(validated_data['event_id'])
+        result = [PaySerializer(i).data for i in results]
         
         return Response(result, status.HTTP_200_OK)

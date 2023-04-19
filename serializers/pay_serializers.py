@@ -6,6 +6,9 @@ class RequestPaySerializer(serializers.Serializer):
     event_id = serializers.UUIDField()
     user_id = serializers.UUIDField()
     amount_pay = serializers.IntegerField()
+    
+class GetRequestPaySerializer(serializers.Serializer):
+    event_id = serializers.UUIDField()
 
 class PaySerializer(serializers.Serializer):
     id = serializers.UUIDField()
