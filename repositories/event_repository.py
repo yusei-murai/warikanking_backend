@@ -18,10 +18,13 @@ class EventRepository(IEventRepository):
         return Event.from_django_model(result)
     
     def add_users_to_event(self, event: Event, users: list):
-        event = EventModel.objects.get(id=event.id)
-        for i in users:
-            user = UserModel.objects.get(id=i.id)
-            event.users.add(user)
+        try:
+            event = EventModel.objects.get(id=event.id)
+            for i in users:
+                user = UserModel.objects.get(id=i.id)
+                event.users.add(user)
+        except EventModel.DoesNotExist:
+            return None
     
     def update(self, id: uuid.UUID, event: Event) -> Optional[Event]:
         try:

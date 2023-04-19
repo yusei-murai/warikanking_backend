@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from event.models import Event
+from django.utils import timezone
 
 class Pay(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)

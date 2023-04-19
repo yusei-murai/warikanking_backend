@@ -17,11 +17,12 @@ from core.i_repositories.i_pay_repository import IPayRepository
 
 class RateThrottel(ScopedRateThrottle):
     THROTTLE_RATES = {
-        'hoge_create': '1/second',
+        'create_rate': '1/second',
     }
 
 class CreateEventAPIView(views.APIView):
     throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
@@ -46,6 +47,7 @@ class CreateEventAPIView(views.APIView):
     
 class CreatePayAPIView(views.APIView):
     throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         pay_repo: IPayRepository = PayRepository()
@@ -69,7 +71,6 @@ class CreatePayAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
     
 class GetEventsAPIView(views.APIView):
-    throttle_classes = [RateThrottel]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
