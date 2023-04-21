@@ -73,7 +73,7 @@ class CreatePayAPIView(views.APIView):
     
 class GetEventsAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
 
         usecase = GetEvents(event_repo)
@@ -90,7 +90,7 @@ class GetEventsAPIView(views.APIView):
     
 class GetPaysAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         pay_repo: IPayRepository = PayRepository()
 
         usecase = GetPays(pay_repo)
