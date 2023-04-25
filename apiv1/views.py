@@ -1,4 +1,5 @@
 import json
+import uuid
 from rest_framework import status, views  
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
@@ -15,6 +16,7 @@ from repositories.pay_repository import PayRepository
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository
 from core.i_repositories.i_pay_repository import IPayRepository
+
 
 class RateThrottel(ScopedRateThrottle):
     THROTTLE_RATES = {
@@ -73,34 +75,35 @@ class CreatePayAPIView(views.APIView):
     
 class GetEventsAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         event_repo: IEventRepository = EventRepository()
 
         usecase = GetEvents(event_repo)
-        data = request.data
-
-        serializer = GetRequestEventSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-
-        results = usecase.get_events(validated_data['user_id'])
-        result = [EventSerializer(i).data for i in results]
+        user_id = self.kwargs.get('user_id')
         
-        return Response(result, status.HTTP_200_OK)
+        try:
+            user_id = uuid.UUID(user_id)
+            results = usecase.get_events(user_id)
+            result = [EventSerializer(i).data for i in results]
+        
+            return Response(result, status.HTTP_200_OK)
+        except:
+            return Response(result, status.HTTP_400_BAD_REQUEST)
     
 class GetPaysAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         pay_repo: IPayRepository = PayRepository()
 
         usecase = GetPays(pay_repo)
-        data = request.data
+        event_id = self.kwargs.get('event_id')
 
-        serializer = GetRequestPaySerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-
-        results = usecase.get_pays(validated_data['event_id'])
-        result = [PaySerializer(i).data for i in results]
+        try:
+            event_id = uuid.UUID(event_id)
+            results = usecase.get_pays(event_id)
+            result = [PaySerializer(i).data for i in results]
         
-        return Response(result, status.HTTP_200_OK)
+            return Response(result, status.HTTP_200_OK)
+        
+        except:
+            return Response(result, status.HTTP_400_BAD_REQUEST)
