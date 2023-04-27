@@ -85,6 +85,9 @@ class GetEventsAPIView(views.APIView):
             user_id = uuid.UUID(user_id)
             results = usecase.get_events(user_id)
             result = [EventSerializer(i).data for i in results]
+            
+            if not result:
+                return Response(result, status.HTTP_204_NO_CONTENT)
         
             return Response(result, status.HTTP_200_OK)
         except:
@@ -102,6 +105,9 @@ class GetPaysAPIView(views.APIView):
             event_id = uuid.UUID(event_id)
             results = usecase.get_pays(event_id)
             result = [PaySerializer(i).data for i in results]
+            
+            if not result:
+                return Response(result, status.HTTP_204_NO_CONTENT)
         
             return Response(result, status.HTTP_200_OK)
         

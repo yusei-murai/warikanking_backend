@@ -1,8 +1,21 @@
 import uuid
+import dataclasses
 from user.models import User as UserModel
 
+@dataclasses.dataclass(frozen=True)
+class UserId:
+    id: uuid.UUID
+    
+@dataclasses.dataclass(frozen=True)
+class Email:
+    email: str
+    
+@dataclasses.dataclass(frozen=True)
+class UserName:
+    name: str
+
 class User:
-    def __init__(self, id: uuid.UUID, email: str, name: str, is_active: bool, is_staff: bool):
+    def __init__(self, id: uuid.UUID, email: Email, name: UserName, is_active: bool, is_staff: bool):
         self.id = id
         self.email = email
         self.name = name

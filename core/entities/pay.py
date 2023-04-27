@@ -1,8 +1,23 @@
 import uuid
+import dataclasses
 from pay.models import Pay as PayModel
+from core.entities.event import EventId
+from core.entities.user import UserId
+
+@dataclasses.dataclass(frozen=True)
+class PayId:
+    id: uuid.UUID
+
+@dataclasses.dataclass(frozen=True)
+class PayName:
+    name: str
+    
+@dataclasses.dataclass(frozen=True)
+class AmountPay:
+    amount_pay: int
 
 class Pay:
-    def __init__(self, id: uuid.UUID, name: str, event_id: uuid.UUID, user_id: uuid.UUID, amount_pay: int):
+    def __init__(self, id: PayId, name: PayName, event_id: EventId, user_id: UserId, amount_pay: AmountPay):
         self.id = id
         self.name = name
         self.event_id = event_id

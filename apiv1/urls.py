@@ -10,5 +10,3 @@ urlpatterns = [
     path('users/<str:user_id>/events/', views.GetEventsAPIView.as_view(), name="get-events"),
     path('events/<str:event_id>/pays/', views.GetPaysAPIView.as_view(), name="get-pays"),
     ] 
-
- 
