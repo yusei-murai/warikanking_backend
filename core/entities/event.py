@@ -19,7 +19,6 @@ class AmountTotal:
 class NumberPeople:
     number_people: int
 
-
 class Event:
     def __init__(self, id: EventId, name: UserName, total: AmountTotal, number_people: NumberPeople):
         self.id = id
