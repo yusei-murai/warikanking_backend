@@ -1,4 +1,4 @@
-from core.entities.event import Event
+from core.entities.event import Event,EventName,AmountTotal
 from core.entities.user import User
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository
@@ -9,7 +9,7 @@ class CreateEvent:
         self.event_repo = event_repo
         self.user_repo = user_repo
 
-    def create_event(self,name: str,total: int,user_ids: list):
+    def create_event(self,name: EventName,total: AmountTotal,user_ids: list):
         users=[]
 
         event = Event(

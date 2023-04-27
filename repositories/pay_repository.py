@@ -1,7 +1,9 @@
 import uuid
 from typing import Optional
 
-from core.entities.pay import Pay
+from core.entities.pay import Pay,PayId
+from core.entities.event import EventId
+from core.entities.user import UserId
 from event.models import Event as EventModel
 from user.models import User as UserModel
 from pay.models import Pay as PayModel
@@ -23,7 +25,7 @@ class PayRepository(IPayRepository):
         except EventModel.DoesNotExist:
             return None
     
-    def update(self, id: uuid.UUID, pay: Pay) -> Optional[Pay]:
+    def update(self, id: PayId, pay: Pay) -> Optional[Pay]:
         try:
             result = PayModel.objects.get(id=id)
             result.name = pay.name
@@ -39,7 +41,7 @@ class PayRepository(IPayRepository):
         except EventModel.DoesNotExist:
             return None
         
-    def delete(self, id: uuid.UUID):
+    def delete(self, id: PayId):
         try:
             result = PayModel.objects.get(id=id)
             result.delete()
@@ -47,7 +49,7 @@ class PayRepository(IPayRepository):
         except PayModel.DoesNotExist:
             pass
     
-    def get_by_id(self, id: uuid.UUID) -> Optional[Pay]:
+    def get_by_id(self, id: PayId) -> Optional[Pay]:
         try:
             result = PayModel.objects.get(id=id)
             return Pay.from_django_model(result)
@@ -55,7 +57,7 @@ class PayRepository(IPayRepository):
         except PayModel.DoesNotExist:
             return None
         
-    def get_by_user_id(self, user_id: uuid.UUID) -> Optional[list]:
+    def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
             result = []
             results = PayModel.objects.filter(user__id=user_id)
@@ -67,7 +69,7 @@ class PayRepository(IPayRepository):
         except EventModel.DoesNotExist:
             return None
         
-    def get_by_event_id(self, event_id: uuid.UUID) -> Optional[list]:
+    def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
             result = []
             results = PayModel.objects.filter(event__id=event_id)

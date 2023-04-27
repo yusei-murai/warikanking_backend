@@ -1,7 +1,8 @@
 import uuid
 from typing import Optional
 
-from core.entities.event import Event
+from core.entities.event import Event,EventId
+from core.entities.user import UserId
 from event.models import Event as EventModel
 from user.models import User as UserModel
 from core.i_repositories.i_event_repository import IEventRepository
@@ -26,7 +27,7 @@ class EventRepository(IEventRepository):
         except EventModel.DoesNotExist:
             return None
     
-    def update(self, id: uuid.UUID, event: Event) -> Optional[Event]:
+    def update(self, id: EventId, event: Event) -> Optional[Event]:
         try:
             result = EventModel.objects.get(id=id)
             result.name = event.name
@@ -38,7 +39,7 @@ class EventRepository(IEventRepository):
         except EventModel.DoesNotExist:
             return None
         
-    def delete(self, id: uuid.UUID):
+    def delete(self, id: EventId):
         try:
             result = EventModel.objects.get(id=id)
             result.delete()
@@ -46,7 +47,7 @@ class EventRepository(IEventRepository):
         except EventModel.DoesNotExist:
             pass
     
-    def get_by_id(self, id: uuid.UUID) -> Optional[Event]:
+    def get_by_id(self, id: EventId) -> Optional[Event]:
         try:
             result = EventModel.objects.get(id=id)
             return Event.from_django_model(result)
@@ -54,7 +55,7 @@ class EventRepository(IEventRepository):
         except EventModel.DoesNotExist:
             return None
         
-    def get_by_user_id(self, user_id: uuid.UUID) -> Optional[Event]:
+    def get_by_user_id(self, user_id: UserId) -> Optional[Event]:
         try:
             user = UserModel.objects.get(id=user_id)
             django_result = user.event_set.all()

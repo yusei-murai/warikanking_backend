@@ -8,7 +8,7 @@ class EventId:
     name: uuid.UUID
 
 @dataclasses.dataclass(frozen=True)
-class UserName:
+class EventName:
     name: str
     
 @dataclasses.dataclass(frozen=True)
@@ -20,7 +20,7 @@ class NumberPeople:
     number_people: int
 
 class Event:
-    def __init__(self, id: EventId, name: UserName, total: AmountTotal, number_people: NumberPeople):
+    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople):
         self.id = id
         self.name = name
         self.total = total

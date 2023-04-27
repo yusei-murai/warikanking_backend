@@ -1,4 +1,6 @@
-from core.entities.pay import Pay
+from core.entities.pay import Pay,AmountPay
+from core.entities.event import EventId
+from core.entities.user import UserId
 from core.i_repositories.i_pay_repository import IPayRepository
 import uuid
 
@@ -6,7 +8,7 @@ class CreatePay:
     def __init__(self, pay_repo: IPayRepository):
         self.pay_repo = pay_repo
 
-    def create_pay(self,name: str,event_id: uuid.UUID,user_id: uuid.UUID,amount_pay: int):
+    def create_pay(self,name: str,event_id: EventId,user_id: UserId,amount_pay: AmountPay):
         pay = Pay(
             id=uuid.uuid4(),
             name=name,
