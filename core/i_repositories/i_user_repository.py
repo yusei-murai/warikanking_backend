@@ -3,7 +3,7 @@ import uuid
 from typing import Optional
 
 from core.entities.user import User,UserId
-from core.entities.event import User,EventId
+from core.entities.event import EventId
 
 class IUserRepository(ABC):
     @abstractmethod
