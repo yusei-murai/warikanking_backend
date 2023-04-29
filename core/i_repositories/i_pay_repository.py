@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 import uuid
 from typing import Optional
 
-from core.entities.event import Event
-from core.entities.user import User
-from core.entities.pay import Pay
+from core.entities.event import EventId
+from core.entities.user import UserId
+from core.entities.pay import Pay,PayId
 
 class IPayRepository(ABC):
     @abstractmethod
@@ -12,21 +12,21 @@ class IPayRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: uuid.UUID, pay: Pay) -> Optional[Pay]:
+    def update(self, id: PayId, pay: Pay) -> Optional[Pay]:
         pass
 
     @abstractmethod
-    def delete(self, id: uuid.UUID):
+    def delete(self, id: PayId):
         pass
 
     @abstractmethod
-    def get_by_id(self, id: uuid.UUID) -> Optional[Pay]:
+    def get_by_id(self, id: PayId) -> Optional[Pay]:
         pass
 
     @abstractmethod
-    def get_by_user_id(self, user_id: uuid.UUID) -> Optional[list]:
+    def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         pass
 
     @abstractmethod
-    def get_by_event_id(self, event_id: uuid.UUID) -> Optional[list]:
+    def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         pass

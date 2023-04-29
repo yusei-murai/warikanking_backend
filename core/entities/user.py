@@ -15,7 +15,7 @@ class UserName:
     name: str
 
 class User:
-    def __init__(self, id: uuid.UUID, email: Email, name: UserName, is_active: bool, is_staff: bool):
+    def __init__(self, id: UserId, email: Email, name: UserName, is_active: bool, is_staff: bool):
         self.id = id
         self.email = email
         self.name = name

@@ -11,6 +11,3 @@ admin.site.register(User,UserAdmin)
 admin.site.register(Event)
 admin.site.register(Pay)
 admin.site.register(PayResult)
-
-
-# Register your models here.

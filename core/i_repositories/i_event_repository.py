@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 import uuid
 from typing import Optional
 
-from core.entities.event import Event
-from core.entities.user import User
+from core.entities.event import Event,EventId
+from core.entities.user import UserId
 
 class IEventRepository(ABC):
     @abstractmethod
@@ -15,17 +15,17 @@ class IEventRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: uuid.UUID, event: Event) -> Optional[Event]:
+    def update(self, id: EventId, event: Event) -> Optional[Event]:
         pass
 
     @abstractmethod
-    def delete(self, id: uuid.UUID):
+    def delete(self, id: EventId):
         pass
 
     @abstractmethod
-    def get_by_id(self, id: uuid.UUID) -> Optional[Event]:
+    def get_by_id(self, id: EventId) -> Optional[Event]:
         pass
 
     @abstractmethod
-    def get_by_user_id(self, user_id: uuid.UUID) -> Optional[Event]:
+    def get_by_user_id(self, user_id: UserId) -> Optional[Event]:
         pass
