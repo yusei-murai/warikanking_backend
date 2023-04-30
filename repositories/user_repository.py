@@ -21,8 +21,8 @@ class UserRepository(IUserRepository):
             result = []
             event = EventModel.objects.get(id=event_id)
             users = event.users.all()
-            for user in users:
-                User.from_django_model(user)
+
+            result = [User.from_django_model(user) for user in users]
 
             return result
         except EventModel.DoesNotExist:

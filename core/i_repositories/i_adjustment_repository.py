@@ -7,7 +7,7 @@ from core.entities.user import UserId
 from core.entities.pay import Pay,PayId
 from core.entities.adjustment import Adjustment,AdjustmentId
 
-class IPayResultRepository(ABC):
+class IAdjustmentRepository(ABC):
     @abstractmethod
     def create(self, adjustment: Adjustment) -> Optional[Adjustment]:
         pass
@@ -26,4 +26,8 @@ class IPayResultRepository(ABC):
 
     @abstractmethod
     def get_by_adjustuser_id(self, user_id: UserId) -> Optional[list]:
+        pass
+    
+    @abstractmethod
+    def get_by_event_id(self, event_id: EventId):
         pass

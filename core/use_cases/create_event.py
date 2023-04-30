@@ -1,4 +1,4 @@
-from core.entities.event import Event,EventName,AmountTotal
+from core.entities.event import Event,EventName,AmountTotal,NumberPeople
 from core.entities.user import User
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository
@@ -11,18 +11,22 @@ class CreateEvent:
 
     def create_event(self,name: EventName,total: AmountTotal,user_ids: list):
         users=[]
+        try:
+            NumberPeople(len(user_ids)) #値オブジェクトによるバリデーション
+            event = Event(
+                id=uuid.uuid4(),
+                name=name,
+                total=total,
+                number_people=len(user_ids),
+            )
 
-        event = Event(
-            id=uuid.uuid4(),
-            name=name,
-            total=total,
-            number_people=len(user_ids)
-        )
+            users = [self.user_repo.get_by_id(id=user_id) for user_id in user_ids]
+            
+            result = self.event_repo.create(event=event)
+            #userとeventの中間テーブルへの保存
+            self.event_repo.add_users_to_event(event=event)
 
-        users = [self.user_repo.get_by_id(id=user_id) for user_id in user_ids]
-
-        result = self.event_repo.create(event=event)
-
-        self.event_repo.add_users_to_event(event=event,users=users)
-
-        return result
+            return result
+        
+        except ValueError as e:
+            return str(e)

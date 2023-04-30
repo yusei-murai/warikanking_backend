@@ -17,8 +17,8 @@ class Adjustment:
     def __init__(self, id: AdjustmentId, event: EventId, adjust_user: UserId, adjusted_user: UserId, amount_pay: AdjustmentAmountPay):
         self.id = id
         self.event = event
-        self.pay_user = adjust_user
-        self.paid_user = adjusted_user
+        self.adjust_user = adjust_user
+        self.adjusted_user = adjusted_user
         self.amount_pay = amount_pay
         
     @classmethod

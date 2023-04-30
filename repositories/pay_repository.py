@@ -1,16 +1,17 @@
 import uuid
 from typing import Optional
 
-from core.entities.pay import Pay,PayId
+from core.entities.pay import Pay,PayId,RelatedUsers
 from core.entities.event import EventId
 from core.entities.user import UserId
 from event.models import Event as EventModel
 from user.models import User as UserModel
 from pay.models import Pay as PayModel
+from pay.models import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
 
 class PayRepository(IPayRepository):
-    def create(self, pay: Pay) -> Optional[Pay]:
+    def create(self, pay: Pay, related_users: RelatedUsers) -> Optional[Pay]:
         try:
             result = PayModel.objects.create(
                 id = pay.id,
@@ -19,20 +20,30 @@ class PayRepository(IPayRepository):
                 user_id = pay.user_id,
                 amount_pay = pay.amount_pay
             )
-
-            return Pay.from_django_model(result)
+                        
+            for user_id in related_users:
+                PayRelatedUserModel.objects.create(
+                    id = uuid.UUID(),
+                    pay = result,
+                    user_id = user_id
+                )
+            
+            return Pay.from_django_model(result,related_users)
         
         except EventModel.DoesNotExist:
             return None
+        except PayRelatedUserModel.DoesNotExist:
+            return None
     
-    def update(self, id: PayId, pay: Pay) -> Optional[Pay]:
+    def update(self, id: PayId, new_pay: Pay, related_users: RelatedUsers) -> Optional[Pay]:
         try:
             result = PayModel.objects.get(id=id)
-            result.name = pay.name
-            result.user = UserModel.objects.get(id=pay.user_id),
-            result.event = EventModel.objects.get(id=pay.event_id),
-            result.amount_pay = pay.amount_pay
+            result.name = new_pay.name
+            result.user = UserModel.objects.get(id=new_pay.user_id)
+            result.event = EventModel.objects.get(id=new_pay.event_id)
+            result.amount_pay = new_pay.amount_pay
             result.save()
+            #results = [PayRelatedUserModel.objects.get(result.user_id = result) for result in related_users]
             return PayModel.from_django_model(result)
         
         except PayModel.DoesNotExist:

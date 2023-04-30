@@ -12,3 +12,11 @@ class Pay(models.Model):
 
     def __str__(self):
         return self.name
+    
+class PayRelatedUser(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    pay = models.ForeignKey("pay.Pay",on_delete=models.CASCADE,default=1)
+    user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1)
+
+    def __str__(self):
+        return self.pay
