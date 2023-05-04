@@ -8,6 +8,7 @@ from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
 from core.use_cases.get_events import GetEvents
 from core.use_cases.get_pays import GetPays
+from core.use_cases.read_qr import ReadQr
 from core.entities.event import Event
 from serializers.event_serializers import EventSerializer,RequestEventSerializer,GetRequestEventSerializer
 from serializers.pay_serializers import PaySerializer,RequestPaySerializer,GetRequestPaySerializer
@@ -98,7 +99,7 @@ class GetEventsAPIView(views.APIView):
         
             return Response(result, status.HTTP_200_OK)
         except:
-            return Response(json.dumps({"message":"failed"}), status.HTTP_400_BAD_REQUEST)
+            return Response(json.dumps({"message":"イベントの読み込みに失敗しました"}), status.HTTP_400_BAD_REQUEST)
     
 class GetPaysAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
@@ -121,3 +122,16 @@ class GetPaysAPIView(views.APIView):
         
         except:
             return Response(result, status.HTTP_400_BAD_REQUEST)
+        
+class ReadQrAPIView(views.APIView):
+    #permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.data)
+        
+        usecase = ReadEventsQr()
+        result = usecase.read_qr(data['binary_data'])
+
+        if result is None:
+            return Response({"message":"QRの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"qr_content":result}, status.HTTP_200_OK)

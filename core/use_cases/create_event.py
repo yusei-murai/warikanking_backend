@@ -24,7 +24,7 @@ class CreateEvent:
             
             result = self.event_repo.create(event=event)
             #userとeventの中間テーブルへの保存
-            self.event_repo.add_users_to_event(event=event)
+            self.event_repo.add_users_to_event(event=event,users=users)
 
             return result
         

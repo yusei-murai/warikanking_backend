@@ -40,10 +40,10 @@ class PayRepository(IPayRepository):
             result = PayModel.objects.get(id=id)
             result.name = new_pay.name
             result.user = UserModel.objects.get(id=new_pay.user_id)
-            result.event = EventModel.objects.get(id=new_pay.event_id)
             result.amount_pay = new_pay.amount_pay
             result.save()
-            #results = [PayRelatedUserModel.objects.get(result.user_id = result) for result in related_users]
+            #未完成
+            #related_users_results = [PayRelatedUserModel.objects.get(result.user_id = result) for result in related_users]
             return PayModel.from_django_model(result)
         
         except PayModel.DoesNotExist:
