@@ -9,27 +9,36 @@ from typing import Optional
 
 class AdjustmentRepository(IAdjustmentRepository):
     def create(self, adjustment: Adjustment):
-        result = AdjustmentModel.objects.create(
-            id = adjustment.id,
-            event = adjustment.event,
-            pay_user = adjustment.pay_user,
-            paid_user = adjustment.paid_user,
-            amount_pay = adjustment.amount_pay
-        )
+        try:
+            event = EventModel.objects.get(id=adjustment.event_id)
+            result = AdjustmentModel.objects.create(
+                id = adjustment.id,
+                event = event,
+                pay_user = adjustment.pay_user,
+                paid_user = adjustment.paid_user,
+                amount_pay = adjustment.amount_pay
+            )
         
-        return Adjustment.from_django_model(result)
+            return Adjustment.from_django_model(result)
+        
+        except EventModel.DoesNotExist:
+            return None
     
     def update(self, id: AdjustmentId, adjustment: Adjustment):
         try:
             result = AdjustmentModel.objects.get(id=id)
-            result.event = adjustment.event
-            result.adjust_user = adjustment.adjust_user
-            result.adjusted_user = adjustment.adjusted_user
+            result.event = EventModel.objects.get(id=adjustment.event_id)
+            result.adjust_user = UserModel.objects.get(id=adjustment.adjust_user_id)
+            result.adjusted_user = UserModel.objects.get(id=adjustment.adjusted_user_id)
             result.amount_pay = adjustment.amount_pay
             result.save()
             return AdjustmentModel.from_django_model(result)
         
         except AdjustmentModel.DoesNotExist:
+            return None
+        except UserModel.DoesNotExist:
+            return None
+        except EventModel.DoesNotExist:
             return None
     
     def delete(self, id: AdjustmentId):
@@ -38,6 +47,16 @@ class AdjustmentRepository(IAdjustmentRepository):
             result.delete()
 
         except AdjustmentModel.DoesNotExist:
+            pass
+        
+    def delete_by_event_id(self, event_id: EventId):
+        try:
+            event = EventModel.objects.get(id=event_id)
+            AdjustmentModel.objects.filter(event=event).delete()
+
+        except AdjustmentModel.DoesNotExist:
+            pass
+        except EventModel.DoesNotExist:
             pass
         
     def get_by_id(self, id: AdjustmentId):

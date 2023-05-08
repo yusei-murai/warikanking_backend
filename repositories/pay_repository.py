@@ -11,7 +11,7 @@ from pay.models import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
 
 class PayRepository(IPayRepository):
-    def create(self, pay: Pay, related_users: RelatedUsers) -> Optional[Pay]:
+    def create(self, pay: Pay) -> Optional[Pay]:
         try:
             result = PayModel.objects.create(
                 id = pay.id,
@@ -21,14 +21,14 @@ class PayRepository(IPayRepository):
                 amount_pay = pay.amount_pay
             )
                         
-            for user_id in related_users:
+            for user_id in pay.related_users:
                 PayRelatedUserModel.objects.create(
-                    id = uuid.UUID(),
+                    id = uuid.uuid4(),
                     pay = result,
                     user_id = user_id
                 )
             
-            return Pay.from_django_model(result,related_users)
+            return Pay.from_django_model(result,pay.related_users)
         
         except EventModel.DoesNotExist:
             return None

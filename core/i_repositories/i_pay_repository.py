@@ -4,7 +4,7 @@ from typing import Optional
 
 from core.entities.event import EventId
 from core.entities.user import UserId
-from core.entities.pay import Pay,PayId
+from core.entities.pay import Pay,PayId,RelatedUsers
 
 class IPayRepository(ABC):
     @abstractmethod

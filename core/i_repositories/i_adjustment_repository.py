@@ -19,6 +19,10 @@ class IAdjustmentRepository(ABC):
     @abstractmethod
     def delete(self, id: AdjustmentId):
         pass
+    
+    @abstractmethod
+    def delete_by_event_id(self, event_id: EventId):
+        pass
 
     @abstractmethod
     def get_by_id(self, id: AdjustmentId) -> Optional[Adjustment]:

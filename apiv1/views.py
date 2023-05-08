@@ -73,6 +73,7 @@ class CreatePayAPIView(views.APIView):
             event_id=validated_data['event_id'],
             user_id=validated_data['user_id'],
             amount_pay=int(validated_data['amount_pay']),
+            related_users=validated_data['related_users'],
         )
 
         serializer = PaySerializer(result)
@@ -128,7 +129,7 @@ class ReadQrAPIView(views.APIView):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.data)
         
-        usecase = ReadEventsQr()
+        usecase = ReadQr()
         result = usecase.read_qr(data['binary_data'])
 
         if result is None:
