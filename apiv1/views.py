@@ -114,6 +114,7 @@ class GetPaysAPIView(views.APIView):
         try:
             event_id = uuid.UUID(event_id)
             results = usecase.get_pays(event_id)
+            print(results)
             result = [PaySerializer(i).data for i in results]
             
             if not result:
@@ -122,7 +123,7 @@ class GetPaysAPIView(views.APIView):
             return Response(result, status.HTTP_200_OK)
         
         except:
-            return Response(result, status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"invalid access"}, status.HTTP_400_BAD_REQUEST)
         
 class ReadQrAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 

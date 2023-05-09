@@ -19,4 +19,4 @@ class PayRelatedUser(models.Model):
     user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1)
 
     def __str__(self):
-        return str(self.pay.name)
+        return str(self.pay.name) + "-" + str(self.user.name)

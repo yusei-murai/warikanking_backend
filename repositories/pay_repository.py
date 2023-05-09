@@ -73,7 +73,10 @@ class PayRepository(IPayRepository):
             result = []
             results = PayModel.objects.filter(user__id=user_id)
 
-            result = [Pay.from_django_model(i) for i in results]
+            for i in results:
+                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id)
+                pay_users_ids = [i.id for i in pay_users]
+                result.append(Pay.from_django_model(i,pay_users_ids))
 
             return result
         
@@ -84,8 +87,11 @@ class PayRepository(IPayRepository):
         try:
             result = []
             results = PayModel.objects.filter(event__id=event_id)
-
-            result = [Pay.from_django_model(i) for i in results]
+            
+            for i in results:
+                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id)
+                pay_users_ids = [i.id for i in pay_users]
+                result.append(Pay.from_django_model(i,pay_users_ids))
 
             return result
         
