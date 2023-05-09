@@ -137,3 +137,8 @@ class ReadQrAPIView(views.APIView):
             return Response({"message":"QRの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"qr_content":result}, status.HTTP_200_OK)
+        
+class AdjustEventAPIView(views.APIView):
+    #permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        pass
