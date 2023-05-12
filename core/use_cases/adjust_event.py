@@ -5,9 +5,8 @@ from core.entities.event import EventId
 from core.services.adjustment_service import AdjustmentService
         
 class AdjustmentEvent:
-    def __init__(self, pay_repo: IPayRepository, adjustment_repo: IAdjustmentRepository):
+    def __init__(self, adjust,e: IPayRepository):
         self.pay_repo = pay_repo
-        self.adjustment_repo = adjustment_repo
         
     def adjust_event(self,event_id: EventId):
         self.adjustment_repo.delete_by_event_id(event_id) #元々のadjustmentを全て削除
@@ -20,6 +19,5 @@ class AdjustmentEvent:
             self.adjustment_repo.create(adjustment)
         
         #[self.adjustment_repo.create(adjustment) for adjustment in result]
-        
         
         return self.adjustment_repo.get_by_event_id(event_id)
