@@ -6,8 +6,8 @@ class AdjustmentService:
     def adjust(event_id: EventId,pays: list):
         result = []
         class Record:
-            def __init__(self, name):
-                self.name = name
+            def __init__(self, user_id):
+                self.user_id = user_id
                 self.balance = 0
         
         if pays == None:
@@ -16,9 +16,9 @@ class AdjustmentService:
         data = {}
 
         for item in pays:
-            user_id = item["user_id"]
-            amount_pay = item["amount_pay"]
-            related_users = item["related_users"]
+            user_id = item.user_id
+            amount_pay = item.amount_pay
+            related_users = item.related_users
         
             if user_id not in data:
                 data[user_id] = Record(user_id)
@@ -39,9 +39,9 @@ class AdjustmentService:
         while True:
             for tbl in data.values():
                 if paid_too_much is None or tbl.balance >= paid_too_much.balance:
-                    paid_too_much = tbl
+                    paid_too_much = tbl.user_id
                 if paid_less is None or tbl.balance <= paid_less.balance:
-                    paid_less = tbl
+                    paid_less = tbl.user_id
                 
             if paid_less.balance == 0 or paid_too_much.balance == 0:
                 break

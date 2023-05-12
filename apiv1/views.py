@@ -9,12 +9,14 @@ from core.use_cases.create_event import CreateEvent
 from core.use_cases.get_events import GetEvents
 from core.use_cases.get_pays import GetPays
 from core.use_cases.read_qr import ReadQr
+from core.use_cases.adjust_event import AdjustmentEvent
 from core.entities.event import Event
 from serializers.event_serializers import EventSerializer,RequestEventSerializer,GetRequestEventSerializer
 from serializers.pay_serializers import PaySerializer,RequestPaySerializer,GetRequestPaySerializer
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository
 from core.i_repositories.i_pay_repository import IPayRepository
+from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
 from core.factories.repository_factory import RepositoryFactory
 
 class RateThrottel(ScopedRateThrottle):
@@ -114,7 +116,7 @@ class GetPaysAPIView(views.APIView):
         try:
             event_id = uuid.UUID(event_id)
             results = usecase.get_pays(event_id)
-            print(results)
+ 
             result = [PaySerializer(i).data for i in results]
             
             if not result:
@@ -140,5 +142,18 @@ class ReadQrAPIView(views.APIView):
         
 class AdjustEventAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
-    def post(self, request, *args, **kwargs):
-        pass
+    def get(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        pay_repo: IPayRepository = factory.create_pay_repository()
+        adjustment_repo: IAdjustmentRepository = factory.create_adjustment_repository()
+        
+        usecase = AdjustmentEvent(pay_repo,adjustment_repo)
+        event_id = self.kwargs.get('event_id')
+        
+        results = usecase.adjust_event(event_id)
+        result = [vars(i) for i in results]
+        
+        if not result:
+            return Response({"message":"計算に失敗しました"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(result, status.HTTP_200_OK)

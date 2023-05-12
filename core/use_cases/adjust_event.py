@@ -5,8 +5,7 @@ from core.entities.event import EventId
 from core.services.adjustment_service import AdjustmentService
         
 class AdjustmentEvent:
-    def __init__(self, event_repo: IEventRepository, pay_repo: IPayRepository, adjustment_repo: IAdjustmentRepository):
-        self.event_repo = event_repo
+    def __init__(self, pay_repo: IPayRepository, adjustment_repo: IAdjustmentRepository):
         self.pay_repo = pay_repo
         self.adjustment_repo = adjustment_repo
         
@@ -17,4 +16,10 @@ class AdjustmentEvent:
         result = AdjustmentService.adjust(event_id,pays)
         
         for adjustment in result:
-            self.adjustment_repo.create(adjustment)x
+            print(vars(adjustment))
+            self.adjustment_repo.create(adjustment)
+        
+        #[self.adjustment_repo.create(adjustment) for adjustment in result]
+        
+        
+        return self.adjustment_repo.get_by_event_id(event_id)

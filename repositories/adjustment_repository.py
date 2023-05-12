@@ -11,17 +11,22 @@ class AdjustmentRepository(IAdjustmentRepository):
     def create(self, adjustment: Adjustment):
         try:
             event = EventModel.objects.get(id=adjustment.event_id)
+            adjust_user = UserModel.objects.get(id=adjustment.adjust_user_id)
+            adjusted_user = UserModel.objects.get(id=adjustment.adjusted_user_id)
+            
             result = AdjustmentModel.objects.create(
                 id = adjustment.id,
                 event = event,
-                pay_user = adjustment.pay_user,
-                paid_user = adjustment.paid_user,
+                adjust_user = adjust_user,
+                adjusted_user = adjusted_user,
                 amount_pay = adjustment.amount_pay
             )
         
             return Adjustment.from_django_model(result)
         
         except EventModel.DoesNotExist:
+            return None
+        except UserModel.DoesNotExist:
             return None
     
     def update(self, id: AdjustmentId, adjustment: Adjustment):
@@ -82,5 +87,6 @@ class AdjustmentRepository(IAdjustmentRepository):
             django_result = AdjustmentModel.objects.filter(event=event)
             result = [Adjustment.from_django_model(i) for i in django_result]
             return result
+        
         except AdjustmentModel.DoesNotExist:
             return None
