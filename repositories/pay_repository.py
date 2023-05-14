@@ -22,10 +22,11 @@ class PayRepository(IPayRepository):
             )
                         
             for user_id in pay.related_users:
+                user = UserModel.objects.get(id=user_id)
                 PayRelatedUserModel.objects.create(
                     id = uuid.uuid4(),
                     pay = result,
-                    user_id = user_id
+                    user = user
                 )
             
             return Pay.from_django_model(result,pay.related_users)
@@ -33,6 +34,8 @@ class PayRepository(IPayRepository):
         except EventModel.DoesNotExist:
             return None
         except PayRelatedUserModel.DoesNotExist:
+            return None
+        except UserModel.DoesNotExist:
             return None
     
     def update(self, id: PayId, new_pay: Pay, related_users: RelatedUsers) -> Optional[Pay]:

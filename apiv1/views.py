@@ -67,6 +67,9 @@ class CreatePayAPIView(views.APIView):
         )
 
         result = usecase.create_pay(pay)
+        
+        if result == None:
+            return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
 
         serializer = PaySerializer(result)
         
