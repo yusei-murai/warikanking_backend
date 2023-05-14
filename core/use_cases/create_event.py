@@ -9,17 +9,9 @@ class CreateEvent:
         self.event_repo = event_repo
         self.user_repo = user_repo
 
-    def create_event(self,name: EventName,total: AmountTotal,user_ids: list):
+    def create_event(self,event: Event,user_ids: list):
         users=[]
         try:
-            NumberPeople(len(user_ids)) #値オブジェクトによるバリデーション
-            event = Event(
-                id=uuid.uuid4(),
-                name=name,
-                total=total,
-                number_people=len(user_ids),
-            )
-
             users = [self.user_repo.get_by_id(id=user_id) for user_id in user_ids]
             
             result = self.event_repo.create(event=event)

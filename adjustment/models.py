@@ -10,4 +10,4 @@ class Adjustment(models.Model):
     amount_pay = models.IntegerField("支払い金額",default=0,null=False)
 
     def __str__(self):
-        return self.id
+        return str(self.event) + " " + str(self.adjust_user) + " " + str(self.adjusted_user)

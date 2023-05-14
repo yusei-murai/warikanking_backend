@@ -1,23 +1,4 @@
-import json
-import uuid
-from rest_framework import status, views  
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated 
-from rest_framework.throttling import ScopedRateThrottle
-from core.use_cases.create_pay import CreatePay
-from core.use_cases.create_event import CreateEvent
-from core.use_cases.get_events import GetEvents
-from core.use_cases.get_pays import GetPays
-from core.use_cases.read_qr import ReadQr
-from core.use_cases.adjust_event import AdjustmentEvent
-from core.entities.event import Event
-from serializers.event_serializers import EventSerializer,RequestEventSerializer,GetRequestEventSerializer
-from serializers.pay_serializers import PaySerializer,RequestPaySerializer,GetRequestPaySerializer
-from core.i_repositories.i_event_repository import IEventRepository
-from core.i_repositories.i_user_repository import IUserRepository
-from core.i_repositories.i_pay_repository import IPayRepository
-from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
-from core.factories.repository_factory import RepositoryFactory
+from .imports import *
 
 class RateThrottel(ScopedRateThrottle):
     THROTTLE_RATES = {
@@ -39,10 +20,17 @@ class CreateEventAPIView(views.APIView):
         serializer = RequestEventSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-
-        result = usecase.create_event(
+        
+        NumberPeople(len(list(validated_data['user_ids']))) #値オブジェクトによるバリデーション
+        event = Event(
+            id=uuid.uuid4(),
             name=validated_data['name'],
             total=int(validated_data['total']),
+            number_people=len(list(validated_data['user_ids'])),
+        )
+
+        result = usecase.create_event(
+            event,
             user_ids=list(validated_data['user_ids'])
         )
         
@@ -50,10 +38,9 @@ class CreateEventAPIView(views.APIView):
             message = json.dumps({"message":result},ensure_ascii=False)
             return Response(message, status.HTTP_400_BAD_REQUEST)
             
-        else:
-            serializer = EventSerializer(result)
+        serializer = EventSerializer(result)
             
-            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.data, status.HTTP_201_CREATED)
     
 class CreatePayAPIView(views.APIView):
     throttle_classes = [RateThrottel]
@@ -69,14 +56,17 @@ class CreatePayAPIView(views.APIView):
         serializer = RequestPaySerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-
-        result = usecase.create_pay(
+        
+        pay = Pay(
+            id = uuid.uuid4(),
             name=validated_data['name'],
             event_id=validated_data['event_id'],
             user_id=validated_data['user_id'],
             amount_pay=int(validated_data['amount_pay']),
-            related_users=validated_data['related_users'],
+            related_users=list(validated_data['related_users']),
         )
+
+        result = usecase.create_pay(pay)
 
         serializer = PaySerializer(result)
         
@@ -133,27 +123,31 @@ class ReadQrAPIView(views.APIView):
         data = json.loads(request.data)
         
         usecase = ReadQr()
-        result = usecase.read_qr(data['binary_data'])
+        qr = Qr(
+            id = uuid.uuid4(),
+            binary_data = data['binary_data']
+        )
+        result = usecase.read_qr(qr)
 
         if result is None:
             return Response({"message":"QRの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"qr_content":result}, status.HTTP_200_OK)
+        
+        return Response({"qr_content":result}, status.HTTP_200_OK)
         
 class AdjustEventAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
-        factory = RepositoryFactory()
-        pay_repo: IPayRepository = factory.create_pay_repository()
-        adjustment_repo: IAdjustmentRepository = factory.create_adjustment_repository()
-        
-        usecase = AdjustmentEvent(pay_repo,adjustment_repo)
+        usecase = AdjustmentEvent()
         event_id = self.kwargs.get('event_id')
         
         results = usecase.adjust_event(event_id)
+        
+        if results == None:
+            return Response({"message":"支払いがありません"}, status.HTTP_400_BAD_REQUEST)
+        
         result = [vars(i) for i in results]
         
         if not result:
             return Response({"message":"計算に失敗しました"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(result, status.HTTP_200_OK)
+        
+        return Response(result, status.HTTP_200_OK)

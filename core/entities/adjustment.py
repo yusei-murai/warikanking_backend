@@ -26,7 +26,7 @@ class Adjustment:
         return Adjustment(
             id = adjustment_model.id,
             event_id = adjustment_model.event.id,
-            pay_user = adjustment_model.adjust_user,
-            paid_user = adjustment_model.adjusted_user,
+            adjust_user_id = adjustment_model.adjust_user,
+            adjusted_user_id = adjustment_model.adjusted_user,
             amount_pay = adjustment_model.amount_pay
         )

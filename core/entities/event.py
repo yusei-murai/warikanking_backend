@@ -26,75 +26,68 @@ class NumberPeople:
 @dataclasses.dataclass(frozen=True)
 class PayList:
     pay_list: list
-        
-#@dataclasses.dataclass(frozen=True)
-#class UserIds:
-    #user_ids: list
 
 class Event:
-    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople, pay_list: PayList):
+    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople):
         self.id = id
         self.name = name
         self.total = total
         self.number_people = number_people
-        
-    def adjust(self,event_id: EventId, pays: list):
+
+    @classmethod
+    def adjust(cls,event_id: EventId, pays: list):
         result = []
-        class Record:
-            def __init__(self, user_id):
-                self.user_id = user_id
-                self.balance = 0
         
-        if pays == None:
+        if not pays:
             return None
         
-        data = {}
+        balance = {} #user_id:balance
 
         for item in pays:
             user_id = item.user_id
             amount_pay = item.amount_pay
             related_users = item.related_users
         
-            if user_id not in data:
-                data[user_id] = Record(user_id)
+            if user_id not in balance:
+                balance[user_id] = 0
         
-            data[user_id].balance += amount_pay #立て替えてる分を丸々支払い者に
+            balance[user_id] += amount_pay #立て替えてる分を丸々支払い者に
         
             for i in related_users:
-                if i not in data:
-                    data[i] = Record(i)
+                if i not in balance:
+                    balance[i] = 0
             
-                debtor = data[i] #立て替えてもらっている人(自分含む)
+                debtor = i #立て替えてもらっている人(自分含む)
                 cost = round(amount_pay / len(related_users))
-                debtor.balance -= cost
+                balance[debtor] -= cost
 
         paid_too_much = None
         paid_less = None
 
         while True:
-            for tbl in data.values():
-                if paid_too_much is None or tbl.balance >= paid_too_much.balance:
-                    paid_too_much = tbl.user_id
-                if paid_less is None or tbl.balance <= paid_less.balance:
-                    paid_less = tbl.user_id
+            for u,b in balance.items():
+                if paid_too_much is None or b >= balance[paid_too_much]:
+                    paid_too_much = u
+                if paid_less is None or b <= balance[paid_less]:
+                    paid_less = u
                 
-            if paid_less.balance == 0 or paid_too_much.balance == 0:
+            if balance[paid_less] == 0 or balance[paid_too_much] == 0:
                 break
 
-            amount = min(paid_too_much.balance, abs(paid_less.balance))
+            amount = min(balance[paid_too_much], abs(balance[paid_less]))
             
-            adjustment_data = {
+            adjustment_balance = {
                 'id': uuid.uuid4(),
                 'event_id': event_id,
-                'adjust_user_id': paid_too_much,
-                'adjusted_user_id': paid_less,
+                'adjust_user_id': paid_less,
+                'adjusted_user_id': paid_too_much,
                 'amount_pay': amount,
             }
             
-            result.append(adjustment_data)
+            result.append(adjustment_balance)
             
-            paid_too_much.balance -= amount
-            paid_less.balance += amount
+            balance[paid_too_much]-= amount
+            balance[paid_less] += amount
             
         return result
 

@@ -10,10 +10,14 @@ class AdjustmentService:
         self.adjustment_repo = adjustment_repo
         
     def adjust(self, event_id: EventId):
+        result = []
         self.adjustment_repo.delete_by_event_id(event_id) #元々のadjustmentを全て削除
         pays = self.pay_repo.get_by_event_id(event_id)
         
         dict_results = Event.adjust(event_id,pays) #return->dict
+        
+        if dict_results == None:
+            return None
         
         for dict_result in dict_results:
             adjustment = Adjustment(
@@ -24,7 +28,6 @@ class AdjustmentService:
                 amount_pay = dict_result['amount_pay']
             )
             self.adjustment_repo.create(adjustment)
+            result.append(adjustment)
         
-        #[self.adjustment_repo.create(adjustment) for adjustment in result]
-        
-        return self.adjustment_repo.get_by_event_id(event_id)
+        return result

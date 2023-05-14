@@ -90,7 +90,7 @@ class PayRepository(IPayRepository):
             
             for i in results:
                 pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id)
-                pay_users_ids = [i.id for i in pay_users]
+                pay_users_ids = [i.user.id for i in pay_users]
                 result.append(Pay.from_django_model(i,pay_users_ids))
 
             return result
