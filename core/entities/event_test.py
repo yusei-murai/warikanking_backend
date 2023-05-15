@@ -10,9 +10,9 @@ class EventTest(unittest.TestCase):
     def test_adjust(self):
         event_id = EventId("example_event_id")
         pays = [
-            Pay(user_id="user1", amount_pay=30, related_users=["user2", "user3"]),
-            Pay(user_id="user2", amount_pay=20, related_users=["user1"]),
-            Pay(user_id="user3", amount_pay=10, related_users=["user1"]),
+            Pay(user_id="user1", related_users=["user2", "user3"]),
+            Pay(user_id="user2", related_users=["user1"]),
+            Pay(user_id="user3", related_users=["user1"]),
         ]
 
         success_result = Event.adjust(event_id, pays)

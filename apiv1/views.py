@@ -21,12 +21,9 @@ class CreateEventAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
-        NumberPeople(len(list(validated_data['user_ids']))) #値オブジェクトによるバリデーション
         event = Event(
             id=uuid.uuid4(),
             name=validated_data['name'],
-            total=int(validated_data['total']),
-            number_people=len(list(validated_data['user_ids'])),
             created_at = datetime.datetime.now().isoformat()
         )
 

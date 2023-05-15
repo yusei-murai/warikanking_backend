@@ -10,29 +10,15 @@ class EventId:
 @dataclasses.dataclass(frozen=True)
 class EventName:
     name: str
-    
-@dataclasses.dataclass(frozen=True)
-class AmountTotal:
-    total: int
-    
-@dataclasses.dataclass(frozen=True)
-class NumberPeople:
-    number_people: int
-    
-    def __post_init__(self):
-        if self.number_people < 2:
-            raise ValueError("shortage people")
         
 @dataclasses.dataclass(frozen=True)
 class EventCreatedAt:
     created_at: str
 
 class Event:
-    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople, created_at:EventCreatedAt):
+    def __init__(self, id: EventId, name: EventName, created_at:EventCreatedAt):
         self.id = id
         self.name = name
-        self.total = total
-        self.number_people = number_people
         self.created_at = created_at
 
     @classmethod

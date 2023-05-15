@@ -1,4 +1,4 @@
-from core.entities.event import Event,EventName,AmountTotal,NumberPeople
+from core.entities.event import Event,EventName
 from core.entities.user import User
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_user_repository import IUserRepository

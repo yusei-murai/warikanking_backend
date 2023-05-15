@@ -10,7 +10,7 @@ from rest_framework.throttling import ScopedRateThrottle
 
 #entities
 from core.entities.pay import Pay, AmountPay, RelatedUsers
-from core.entities.event import Event, EventName, AmountTotal, NumberPeople
+from core.entities.event import Event, EventName
 from core.entities.qr import Qr
 
 #use_cases

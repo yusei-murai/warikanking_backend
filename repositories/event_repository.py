@@ -13,8 +13,6 @@ class EventRepository(IEventRepository):
         result = EventModel.objects.create(
             id = event.id,
             name = event.name,
-            total = event.total,
-            number_people = event.number_people,
             created_at = datetime.datetime.fromisoformat(event.created_at)
         )
         
@@ -33,8 +31,6 @@ class EventRepository(IEventRepository):
         try:
             result = EventModel.objects.get(id=id)
             result.name = event.name
-            result.total = event.total
-            result.number_people = event.number_people
             result.save()
             return EventModel.from_django_model(result)
         
