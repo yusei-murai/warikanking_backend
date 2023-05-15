@@ -29,7 +29,7 @@ class IAdjustmentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_adjustuser_id(self, user_id: UserId) -> Optional[list]:
+    def get_by_adjust_user_id(self, user_id: UserId) -> Optional[list]:
         pass
     
     @abstractmethod

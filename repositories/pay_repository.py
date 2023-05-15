@@ -1,5 +1,6 @@
 import uuid
 from typing import Optional
+import datetime
 
 from core.entities.pay import Pay,PayId,RelatedUsers
 from core.entities.event import EventId
@@ -18,24 +19,31 @@ class PayRepository(IPayRepository):
                 name = pay.name,
                 event_id = pay.event_id,
                 user_id = pay.user_id,
-                amount_pay = pay.amount_pay
+                amount_pay = pay.amount_pay,
+                created_at = datetime.datetime.fromisoformat(pay.created_at)
             )
-                        
+                
             for user_id in pay.related_users:
                 user = UserModel.objects.get(id=user_id)
                 PayRelatedUserModel.objects.create(
                     id = uuid.uuid4(),
                     pay = result,
-                    user = user
+                    user = user,
+                    created_at = result.created_at
                 )
             
             return Pay.from_django_model(result,pay.related_users)
         
         except EventModel.DoesNotExist:
+            result.delete()
             return None
+        
         except PayRelatedUserModel.DoesNotExist:
+            result.delete()
             return None
+        
         except UserModel.DoesNotExist:
+            result.delete()
             return None
     
     def update(self, id: PayId, new_pay: Pay, related_users: RelatedUsers) -> Optional[Pay]:
@@ -74,10 +82,10 @@ class PayRepository(IPayRepository):
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
             result = []
-            results = PayModel.objects.filter(user__id=user_id)
+            results = PayModel.objects.filter(user__id=user_id).order_by("created_at")
 
             for i in results:
-                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id)
+                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id).order_by("created_at")
                 pay_users_ids = [i.id for i in pay_users]
                 result.append(Pay.from_django_model(i,pay_users_ids))
 
@@ -92,7 +100,7 @@ class PayRepository(IPayRepository):
             results = PayModel.objects.filter(event__id=event_id)
             
             for i in results:
-                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id)
+                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id).order_by("created_at")
                 pay_users_ids = [i.user.id for i in pay_users]
                 result.append(Pay.from_django_model(i,pay_users_ids))
 

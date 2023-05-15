@@ -1,5 +1,6 @@
 import uuid
 from typing import Optional
+import datetime
 
 from core.entities.event import Event,EventId
 from core.entities.user import UserId
@@ -13,7 +14,8 @@ class EventRepository(IEventRepository):
             id = event.id,
             name = event.name,
             total = event.total,
-            number_people = event.number_people
+            number_people = event.number_people,
+            created_at = datetime.datetime.fromisoformat(event.created_at)
         )
         
         return Event.from_django_model(result)
@@ -58,7 +60,7 @@ class EventRepository(IEventRepository):
     def get_by_user_id(self, user_id: UserId) -> Optional[Event]:
         try:
             user = UserModel.objects.get(id=user_id)
-            django_result = user.event_set.all()
+            django_result = user.event_set.all().order_by('created_at')
             result = [Event.from_django_model(i) for i in django_result]
             return result
         

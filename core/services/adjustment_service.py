@@ -3,6 +3,7 @@ from core.entities.adjustment import Adjustment
 from core.i_repositories.i_pay_repository import IPayRepository
 from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
 import uuid
+import datetime
 
 class AdjustmentService:
     def __init__(self, pay_repo: IPayRepository, adjustment_repo: IAdjustmentRepository):
@@ -25,7 +26,8 @@ class AdjustmentService:
                 event_id = dict_result['event_id'],
                 adjust_user_id = dict_result['adjust_user_id'],
                 adjusted_user_id = dict_result['adjusted_user_id'],
-                amount_pay = dict_result['amount_pay']
+                amount_pay = dict_result['amount_pay'],
+                created_at = datetime.datetime.now().isoformat()
             )
             self.adjustment_repo.create(adjustment)
             result.append(adjustment)

@@ -19,15 +19,20 @@ class AmountPay:
 @dataclasses.dataclass(frozen=True)
 class RelatedUsers:
     related_users: list
+    
+@dataclasses.dataclass(frozen=True)
+class PayCreatedAt:
+    created_at: str
 
 class Pay:
-    def __init__(self, id: PayId, name: PayName, event_id: EventId, user_id: UserId, amount_pay: AmountPay, related_users: RelatedUsers):
+    def __init__(self, id: PayId, name: PayName, event_id: EventId, user_id: UserId, amount_pay: AmountPay, related_users: RelatedUsers,created_at: PayCreatedAt):
         self.id = id
         self.name = name
         self.event_id = event_id
         self.user_id = user_id
         self.amount_pay = amount_pay
         self.related_users = related_users
+        self.created_at = created_at
 
     @classmethod
     def from_django_model(cls, pay_model: PayModel, related_users: RelatedUsers):
@@ -37,5 +42,6 @@ class Pay:
             event_id = pay_model.event.id,
             user_id = pay_model.user_id,
             amount_pay = pay_model.amount_pay,
-            related_users = related_users
+            related_users = related_users,
+            created_at = pay_model.created_at.isoformat()
         )

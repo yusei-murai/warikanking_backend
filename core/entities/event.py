@@ -24,15 +24,16 @@ class NumberPeople:
             raise ValueError("shortage people")
         
 @dataclasses.dataclass(frozen=True)
-class PayList:
-    pay_list: list
+class EventCreatedAt:
+    created_at: str
 
 class Event:
-    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople):
+    def __init__(self, id: EventId, name: EventName, total: AmountTotal, number_people: NumberPeople, created_at:EventCreatedAt):
         self.id = id
         self.name = name
         self.total = total
         self.number_people = number_people
+        self.created_at = created_at
 
     @classmethod
     def adjust(cls,event_id: EventId, pays: list):
@@ -97,6 +98,7 @@ class Event:
             id = event_model.id,
             name = event_model.name,
             total = event_model.total,
-            number_people = event_model.number_people
+            number_people = event_model.number_people,
+            created_at = event_model.created_at.isoformat()
             #user_ids = user_ids
         )

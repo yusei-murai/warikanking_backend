@@ -27,6 +27,7 @@ class CreateEventAPIView(views.APIView):
             name=validated_data['name'],
             total=int(validated_data['total']),
             number_people=len(list(validated_data['user_ids'])),
+            created_at = datetime.datetime.now().isoformat()
         )
 
         result = usecase.create_event(
@@ -64,6 +65,7 @@ class CreatePayAPIView(views.APIView):
             user_id=validated_data['user_id'],
             amount_pay=int(validated_data['amount_pay']),
             related_users=list(validated_data['related_users']),
+            created_at = datetime.datetime.now().isoformat()
         )
 
         result = usecase.create_pay(pay)
