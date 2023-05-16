@@ -5,10 +5,10 @@ import datetime
 from core.entities.pay import Pay,PayId,RelatedUsers
 from core.entities.event import EventId
 from core.entities.user import UserId
-from event.models import Event as EventModel
-from user.models import User as UserModel
-from pay.models import Pay as PayModel
-from pay.models import PayRelatedUser as PayRelatedUserModel
+from data_model.models  import Event as EventModel
+from data_model.models  import User as UserModel
+from data_model.models  import Pay as PayModel
+from data_model.models  import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
 
 class PayRepository(IPayRepository):

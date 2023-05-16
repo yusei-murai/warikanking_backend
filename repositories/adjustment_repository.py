@@ -2,9 +2,9 @@ from core.entities.adjustment import Adjustment, AdjustmentId
 from core.entities.user import UserId
 from core.entities.event import EventId
 from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
-from adjustment.models import Adjustment as AdjustmentModel
-from user.models import User as UserModel
-from event.models import Event as EventModel
+from data_model.models import Adjustment as AdjustmentModel
+from data_model.models  import User as UserModel
+from data_model.models  import Event as EventModel
 from typing import Optional
 import datetime
 

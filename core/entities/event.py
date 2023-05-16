@@ -1,7 +1,7 @@
 import uuid
 import dataclasses
 
-from event.models import Event as EventModel
+from data_model.models import Event as EventModel
 
 @dataclasses.dataclass(frozen=True)
 class EventId:

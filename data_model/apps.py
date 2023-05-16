@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
-class AdjustmentConfig(AppConfig):
+
+class DataModelConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'adjustment'
+    name = 'data_model'

@@ -1,6 +1,6 @@
 import uuid
 import dataclasses
-from pay.models import Pay as PayModel
+from data_model.models import Pay as PayModel
 from core.entities.event import EventId
 from core.entities.user import UserId
 

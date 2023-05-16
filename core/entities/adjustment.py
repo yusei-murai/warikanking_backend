@@ -1,7 +1,7 @@
 import uuid
 import dataclasses
 
-from adjustment.models import Adjustment as AdjustmentModel
+from data_model.models import Adjustment as AdjustmentModel
 from core.entities.event import EventId
 from core.entities.user import UserId
 

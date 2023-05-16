@@ -4,7 +4,7 @@ import datetime
 
 from core.entities.event import Event,EventId
 from core.entities.user import UserId
-from event.models import Event as EventModel
+from data_model.models  import Event as EventModel
 from user.models import User as UserModel
 from core.i_repositories.i_event_repository import IEventRepository
 
