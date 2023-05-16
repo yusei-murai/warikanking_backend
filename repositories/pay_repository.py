@@ -14,15 +14,19 @@ from core.i_repositories.i_pay_repository import IPayRepository
 class PayRepository(IPayRepository):
     def create(self, pay: Pay) -> Optional[Pay]:
         try:
+            result = None
+            
+            user = UserModel.objects.get(id = pay.user_id)
+            event = EventModel.objects.get(id = pay.event_id)
             result = PayModel.objects.create(
                 id = pay.id,
                 name = pay.name,
-                event_id = pay.event_id,
-                user_id = pay.user_id,
+                event = event,
+                user = user,
                 amount_pay = pay.amount_pay,
                 created_at = datetime.datetime.fromisoformat(pay.created_at)
             )
-                
+                 
             for user_id in pay.related_users:
                 user = UserModel.objects.get(id=user_id)
                 PayRelatedUserModel.objects.create(
@@ -35,14 +39,20 @@ class PayRepository(IPayRepository):
             return Pay.from_django_model(result,pay.related_users)
         
         except EventModel.DoesNotExist:
+            if result == None:
+                return None
             result.delete()
             return None
         
         except PayRelatedUserModel.DoesNotExist:
+            if result == None:
+                return None
             result.delete()
             return None
         
         except UserModel.DoesNotExist:
+            if result == None:
+                return None
             result.delete()
             return None
     

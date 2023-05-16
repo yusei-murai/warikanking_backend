@@ -3,7 +3,6 @@ from core.entities.event import Event
 
 class RequestEventSerializer(serializers.Serializer):
     name = serializers.CharField()
-    total = serializers.IntegerField()
     user_ids = serializers.ListField(child=serializers.UUIDField())
 
 class GetRequestEventSerializer(serializers.Serializer):
@@ -12,5 +11,3 @@ class GetRequestEventSerializer(serializers.Serializer):
 class EventSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
-    total = serializers.IntegerField()
-    number_people = serializers.IntegerField()

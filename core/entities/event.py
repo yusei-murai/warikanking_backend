@@ -83,8 +83,6 @@ class Event:
         return Event(
             id = event_model.id,
             name = event_model.name,
-            total = event_model.total,
-            number_people = event_model.number_people,
             created_at = event_model.created_at.isoformat()
             #user_ids = user_ids
         )
