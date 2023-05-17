@@ -21,7 +21,7 @@ from core.use_cases.get_events import GetEvents
 from core.use_cases.get_pays import GetPays
 from core.use_cases.read_qr import ReadQr
 from core.use_cases.adjust_event import AdjustmentEvent
-from core.use_cases.create_friend import CreateFriend
+from core.use_cases.request_friend import RequestFriend
 
 #serializers
 from serializers.event_serializers import EventSerializer, RequestEventSerializer, GetRequestEventSerializer

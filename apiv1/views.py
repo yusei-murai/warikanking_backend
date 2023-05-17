@@ -154,7 +154,7 @@ class AdjustEventAPIView(views.APIView):
         
         return Response(result, status.HTTP_200_OK)
     
-class CreateFriendAPIView(views.APIView):
+class RequestFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
     #permission_classes = [IsAuthenticated] 
@@ -162,24 +162,21 @@ class CreateFriendAPIView(views.APIView):
         factory = RepositoryFactory()
         pay_repo: IFriendRepository = factory.create_friend_repository()
 
-        usecase = CreateFriend(pay_repo)
+        usecase = RequestFriend(pay_repo)
         data = request.data
 
         serializer = RequestFriendSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
-        approval = Approval(0)
-        
         friend = Friend(
             id = uuid.uuid4(),
-            user_1_id=validated_data['user_1_id'],
-            user_2_id=validated_data['user_2_id'],
-            approval=approval,
+            user_1_id=validated_data['request_user_id'],
+            user_2_id=validated_data['requested_user_id'],
             created_at = datetime.datetime.now().isoformat()
         )
 
-        result = usecase.create_friend(friend)
+        result = usecase.request_friend(friend)
         
         if result == None:
             return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)

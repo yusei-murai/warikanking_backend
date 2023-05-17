@@ -16,13 +16,13 @@ class FriendRepository(IFriendRepository):
     def create(self, friend: Friend):
         try:
             result = None
-            user_1 = UserModel.objects.get(id=friend._user_id)
-            user_2 = UserModel.objects.get(id=friend.adjusted_user_id)
+            request_user = UserModel.objects.get(id=friend.request_user_id)
+            requested_user = UserModel.objects.get(id=friend.requested_user_id)
             
             result = FriendModel.objects.create(
                 id = friend.id,
-                user_1 = user_1,
-                user_2 = user_2,
+                request_user = request_user,
+                requested_user = requested_user,
                 approval = friend.approval,
                 created_at = datetime.datetime.fromisoformat(friend.created_at)
             )

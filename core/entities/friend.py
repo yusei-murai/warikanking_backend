@@ -24,10 +24,10 @@ class Approval:
 
 
 class Friend:
-    def __init__(self, id: FriendId, user_1_id: UserId, user_2_id: UserId, approval:Approval, created_at: FriendCreatedAt):
+    def __init__(self, id: FriendId, request_user_id: UserId, requested_user_id: UserId, approval:Approval, created_at: FriendCreatedAt):
         self.id = id
-        self.user_1_id = user_1_id
-        self.user_2_id = user_2_id
+        self.request_user_id = request_user_id
+        self.requested_user_id = requested_user_id
         self.approval = approval
         self.created_at = created_at
 
@@ -35,8 +35,8 @@ class Friend:
     def from_django_model(cls, friend_model: FriendModel):
         return Friend(
             id = uuid.UUID(str(friend_model.id)),
-            user_1_id = friend_model.user_1_id,
-            user_2_id = friend_model.user_2_id,
+            request_user_id = friend_model.request_user_id,
+            requested_user_id = friend_model.requested_user_id,
             approval = friend_model.approval,
             created_at = friend_model.created_at.isoformat()
         )
