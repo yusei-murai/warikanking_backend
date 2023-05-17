@@ -22,9 +22,8 @@ class Approval:
         if not(self.approval == self.APPROVAL or self.approval == self.DISAPPROVAL):
             raise ValueError("only true or false")
 
-
 class Friend:
-    def __init__(self, id: FriendId, request_user_id: UserId, requested_user_id: UserId, approval:Approval, created_at: FriendCreatedAt):
+    def __init__(self, id: FriendId, request_user_id: UserId, requested_user_id: UserId, approval: Approval, created_at: FriendCreatedAt):
         self.id = id
         self.request_user_id = request_user_id
         self.requested_user_id = requested_user_id

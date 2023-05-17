@@ -52,4 +52,4 @@ class Friend(models.Model):
     created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
 
     def __str__(self):
-        return str(self.user_1.name) + "-" + str(self.user_2.name)
+        return str(self.request_user.name) + "-" + str(self.requested_user.name)

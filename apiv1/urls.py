@@ -12,4 +12,5 @@ urlpatterns = [
     path('qr/', views.ReadQrAPIView.as_view(), name="read-qr"),
     path('events/<str:event_id>/adjustment/', views.AdjustEventAPIView.as_view(), name="adjust-events"),
     path('friends/', views.RequestFriendAPIView.as_view(), name="request-friends"),
+    path('friends/<str:friend_id>/approval/', views.ApproveFriendAPIView.as_view(), name="approve-friends"),
     ] 

@@ -1,7 +1,7 @@
 from core.entities.adjustment import Adjustment, AdjustmentId
 from core.entities.user import UserId
 from core.entities.event import EventId
-from core.entities.friend import Friend, FriendId
+from core.entities.friend import Friend, FriendId, Approval
 from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
 from core.i_repositories.i_friend_repository import IFriendRepository
 from data_model.models import Adjustment as AdjustmentModel
@@ -18,16 +18,16 @@ class FriendRepository(IFriendRepository):
             result = None
             request_user = UserModel.objects.get(id=friend.request_user_id)
             requested_user = UserModel.objects.get(id=friend.requested_user_id)
-            
+                        
             result = FriendModel.objects.create(
                 id = friend.id,
                 request_user = request_user,
                 requested_user = requested_user,
-                approval = friend.approval,
+                approval = friend.approval.approval,
                 created_at = datetime.datetime.fromisoformat(friend.created_at)
             )
         
-            return Adjustment.from_django_model(result)
+            return Friend.from_django_model(result)
         
         except UserModel.DoesNotExist:
             if result == None:
@@ -35,29 +35,17 @@ class FriendRepository(IFriendRepository):
             result.delete()
             return None
             
-    def update(self, id: AdjustmentId, adjustment: Adjustment):
-        pass
-        """
+    def update(self, id: FriendId, approval: Approval):
         try:
-            result = AdjustmentModel.objects.get(id=id)
-            result.event = EventModel.objects.get(id=adjustment.event_id)
-            result.adjust_user = UserModel.objects.get(id=adjustment.adjust_user_id)
-            result.adjusted_user = UserModel.objects.get(id=adjustment.adjusted_user_id)
-            result.amount_pay = adjustment.amount_pay
+            result = FriendModel.objects.get(id=id)
+            result.approval = approval.approval
             result.save()
-            return AdjustmentModel.from_django_model(result)
+            return Friend.from_django_model(result)
         
-        except AdjustmentModel.DoesNotExist:
+        except FriendModel.DoesNotExist:
             return None
-        
-        except UserModel.DoesNotExist:
-            return None
-        
-        except EventModel.DoesNotExist:
-            return None
-        """
     
-    def delete(self, id: AdjustmentId):
+    def delete(self, id: FriendId):
         pass
         """
         try:

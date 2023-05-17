@@ -160,19 +160,21 @@ class RequestFriendAPIView(views.APIView):
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
-        pay_repo: IFriendRepository = factory.create_friend_repository()
+        friend_repo: IFriendRepository = factory.create_friend_repository()
 
-        usecase = RequestFriend(pay_repo)
+        usecase = RequestFriend(friend_repo)
         data = request.data
 
         serializer = RequestFriendSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
+        approval = Approval(False)
         friend = Friend(
             id = uuid.uuid4(),
-            user_1_id=validated_data['request_user_id'],
-            user_2_id=validated_data['requested_user_id'],
+            request_user_id = validated_data['request_user_id'],
+            requested_user_id = validated_data['requested_user_id'],
+            approval = approval,
             created_at = datetime.datetime.now().isoformat()
         )
 
@@ -180,7 +182,70 @@ class RequestFriendAPIView(views.APIView):
         
         if result == None:
             return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
-
-        serializer = PaySerializer(result)
         
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        if type(result) is str:
+            return Response({"message":result}, status.HTTP_400_BAD_REQUEST)
+
+        result = vars(result)
+        
+        return Response(result, status.HTTP_201_CREATED)
+    
+class ApproveFriendAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
+    #permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        friend_repo: IFriendRepository = factory.create_friend_repository()
+
+        usecase = RequestFriend(friend_repo)
+        data = request.data
+
+        serializer = RequestFriendSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        approval = Approval(False)
+        friend = Friend(
+            id = uuid.uuid4(),
+            request_user_id = validated_data['request_user_id'],
+            requested_user_id = validated_data['requested_user_id'],
+            approval = approval,
+            created_at = datetime.datetime.now().isoformat()
+        )
+
+        result = usecase.request_friend(friend)
+        
+        if result == None:
+            return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
+        
+        if type(result) is str:
+            return Response({"message":result}, status.HTTP_400_BAD_REQUEST)
+
+        result = vars(result)
+        
+        return Response(result, status.HTTP_201_CREATED)
+    
+class ApproveFriendAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
+    #permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        friend_repo: IFriendRepository = factory.create_friend_repository()
+
+        usecase = ApproveFriend(friend_repo)
+        
+        friend_id = self.kwargs.get('friend_id')
+
+        result = usecase.approve_friend(friend_id)
+        
+        if result == None:
+            return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
+        
+        if type(result) is str:
+            return Response({"message":result}, status.HTTP_400_BAD_REQUEST)
+
+        result = vars(result)
+        
+        return Response(result, status.HTTP_201_CREATED)
