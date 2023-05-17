@@ -2,10 +2,12 @@ from repositories.adjustment_repository import AdjustmentRepository
 from repositories.user_repository import UserRepository
 from repositories.event_repository import EventRepository
 from repositories.pay_repository import PayRepository
+from repositories.friend_repository import FriendRepository
 from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
 from core.i_repositories.i_user_repository import IUserRepository
 from core.i_repositories.i_event_repository import IEventRepository
 from core.i_repositories.i_pay_repository  import IPayRepository
+from core.i_repositories.i_friend_repository  import IFriendRepository
 from core.factories.i_repository_factory import IRepositoryFactory
 
 class RepositoryFactory(IRepositoryFactory):
@@ -20,3 +22,6 @@ class RepositoryFactory(IRepositoryFactory):
     
     def create_user_repository(self) -> IUserRepository:
         return UserRepository()
+    
+    def create_friend_repository(self) -> IFriendRepository:
+        return FriendRepository()

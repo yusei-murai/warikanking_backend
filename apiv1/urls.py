@@ -11,4 +11,5 @@ urlpatterns = [
     path('events/<str:event_id>/pays/', views.GetPaysAPIView.as_view(), name="get-pays"),
     path('qr/', views.ReadQrAPIView.as_view(), name="read-qr"),
     path('events/<str:event_id>/adjustment/', views.AdjustEventAPIView.as_view(), name="adjust-events"),
+    path('users/friends/', views.CreateFriendAPIView.as_view(), name="create-friends"),
     ] 

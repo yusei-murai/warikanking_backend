@@ -153,3 +153,34 @@ class AdjustEventAPIView(views.APIView):
             return Response({"message":"計算に失敗しました"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response(result, status.HTTP_200_OK)
+    
+class CreateFriendAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
+    #permission_classes = [IsAuthenticated] 
+    def post(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        pay_repo: IFriendRepository = factory.create_friend_repository()
+
+        usecase = CreateFriend(pay_repo)
+        data = request.data
+
+        serializer = RequestFriendSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        
+        friend = Friend(
+            id = uuid.uuid4(),
+            user_1_id=validated_data['user_1_id'],
+            user_2_id=validated_data['user_2_id'],
+            created_at = datetime.datetime.now().isoformat()
+        )
+
+        result = usecase.create_friend(friend)
+        
+        if result == None:
+            return Response({"message":"不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
+
+        serializer = PaySerializer(result)
+        
+        return Response(serializer.data, status.HTTP_201_CREATED)
