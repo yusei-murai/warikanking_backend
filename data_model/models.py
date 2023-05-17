@@ -48,7 +48,7 @@ class Friend(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     user_1 = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='user1',null=False)
     user_2 = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='user2',null=False)
-    approval = models.IntegerField("承認",default=0,null=False)
+    approval = models.BooleanField("承認",default=False,null=False)
     created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
 
     def __str__(self):

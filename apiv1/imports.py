@@ -12,7 +12,7 @@ from rest_framework.throttling import ScopedRateThrottle
 from core.entities.pay import Pay, AmountPay, RelatedUsers
 from core.entities.event import Event, EventName
 from core.entities.qr import Qr
-from core.entities.friend import Friend
+from core.entities.friend import Friend,Approval
 
 #use_cases
 from core.use_cases.create_pay import CreatePay

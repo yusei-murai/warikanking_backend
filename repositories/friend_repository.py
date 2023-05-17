@@ -23,7 +23,7 @@ class FriendRepository(IFriendRepository):
                 id = friend.id,
                 user_1 = user_1,
                 user_2 = user_2,
-                approval = friend.approval
+                approval = friend.approval,
                 created_at = datetime.datetime.fromisoformat(friend.created_at)
             )
         

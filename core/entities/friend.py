@@ -13,14 +13,14 @@ class FriendCreatedAt:
     
 @dataclasses.dataclass(frozen=True)
 class Approval:
-    approval: int
+    approval: bool
     
-    APPROVAL = 1
-    DISAPPROVAL = 0
+    APPROVAL = True
+    DISAPPROVAL = False
 
     def __post_init__(self):
         if not(self.approval == self.APPROVAL or self.approval == self.DISAPPROVAL):
-            raise ValueError
+            raise ValueError("only true or false")
 
 
 class Friend:

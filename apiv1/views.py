@@ -169,10 +169,13 @@ class CreateFriendAPIView(views.APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         
+        approval = Approval(0)
+        
         friend = Friend(
             id = uuid.uuid4(),
             user_1_id=validated_data['user_1_id'],
             user_2_id=validated_data['user_2_id'],
+            approval=approval,
             created_at = datetime.datetime.now().isoformat()
         )
 
