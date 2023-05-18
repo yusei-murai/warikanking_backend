@@ -21,7 +21,6 @@ class Qr:
         img_binary = base64.b64decode(self.binary_data)
         jpg = np.frombuffer(img_binary,dtype = np.uint8)
         img = cv2.imdecode(jpg, cv2.IMREAD_COLOR)
-        
         qcd = cv2.QRCodeDetector()
         retval, decoded_info, points, straight_qrcode = qcd.detectAndDecodeMulti(img)
 

@@ -24,6 +24,7 @@ class EventRepository(IEventRepository):
             for i in users:
                 user = UserModel.objects.get(id=i.id)
                 event.users.add(user)
+                
         except EventModel.DoesNotExist:
             return None
     
