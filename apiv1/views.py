@@ -151,7 +151,7 @@ class AdjustEventAPIView(views.APIView):
         results = usecase.adjust_event(event_id)
         
         if results == None:
-            return Response({"message":"支払いがありません"}, status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
         
         result = [vars(i) for i in results]
         

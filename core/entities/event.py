@@ -34,6 +34,9 @@ class Event:
             user_id = item.user_id
             amount_pay = item.amount_pay
             related_users = item.related_users
+            
+            if len(related_users) != len(set(related_users)):
+                return None
         
             if user_id not in balance:
                 balance[user_id] = 0
