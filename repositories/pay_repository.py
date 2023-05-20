@@ -91,7 +91,7 @@ class PayRepository(IPayRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            pay_models = PayModel.objects.select_related('event').filter(user__id=user_id).order_by('created_at')
+            pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('created_at')
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
             result = []
