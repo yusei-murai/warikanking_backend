@@ -13,7 +13,7 @@ import datetime
 from django.db.models import Q
 
 class FriendRepository(IFriendRepository):
-    def create(self, friend: Friend):
+    def create(self, friend: Friend) -> Friend:
         try:
             result = None
             request_user = UserModel.objects.get(id=friend.request_user_id)
@@ -35,7 +35,7 @@ class FriendRepository(IFriendRepository):
             result.delete()
             return None
             
-    def update(self, id: FriendId, approval: Approval):
+    def update(self, id: FriendId, approval: Approval) -> Friend:
         try:
             result = FriendModel.objects.get(id=id)
             result.approval = approval.approval
@@ -56,10 +56,9 @@ class FriendRepository(IFriendRepository):
             pass
         """
         
-    def get_by_user_id(self, user_id: UserId):
+    def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            user = UserModel.objects.get(id=user_id)
-            django_result = FriendModel.objects.filter(Q(user_1=user)|Q(user_2=user)).order_by("created_at")
+            django_result = FriendModel.objects.filter(Q(request_user_id=user_id) | Q(requested_user_id=user_id)).order_by("created_at")
             result = [FriendModel.from_django_model(i) for i in django_result]
             return result
         

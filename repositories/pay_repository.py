@@ -10,8 +10,10 @@ from data_model.models  import User as UserModel
 from data_model.models  import Pay as PayModel
 from data_model.models  import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
+from django.db import transaction
 
 class PayRepository(IPayRepository):
+    @transaction.atomic
     def create(self, pay: Pay) -> Optional[Pay]:
         try:
             result = None
@@ -91,13 +93,17 @@ class PayRepository(IPayRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            result = []
-            results = PayModel.objects.filter(user__id=user_id).order_by("created_at")
+            pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('created_at')
+            related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
-            for i in results:
-                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id).order_by("created_at")
-                pay_users_ids = [i.id for i in pay_users]
-                result.append(Pay.from_django_model(i,pay_users_ids))
+            result = []
+            prelated_users_ids_dict = {pay.id: [] for pay in pay_models}
+
+            for related_user in related_users:
+                prelated_users_ids_dict[related_user.pay_id].append(related_user.user_id)
+
+            for pay_model in pay_models:
+                result.append(Pay.from_django_model(pay_model, prelated_users_ids_dict[pay_model.id]))
 
             return result
         
@@ -106,15 +112,19 @@ class PayRepository(IPayRepository):
         
     def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
+            pay_models = PayModel.objects.select_related('event').filter(event__id=event_id).order_by('created_at')
+            related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
+
             result = []
-            results = PayModel.objects.filter(event__id=event_id)
-            
-            for i in results:
-                pay_users = PayRelatedUserModel.objects.filter(pay__id=i.id).order_by("created_at")
-                pay_users_ids = [i.user.id for i in pay_users]
-                result.append(Pay.from_django_model(i,pay_users_ids))
+            prelated_users_ids_dict = {pay.id: [] for pay in pay_models}
+
+            for related_user in related_users:
+                prelated_users_ids_dict[related_user.pay_id].append(related_user.user_id)
+
+            for pay_model in pay_models:
+                result.append(Pay.from_django_model(pay_model, prelated_users_ids_dict[pay_model.id]))
 
             return result
-        
+
         except EventModel.DoesNotExist:
             return None
