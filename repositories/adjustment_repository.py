@@ -9,7 +9,7 @@ from typing import Optional
 import datetime
 
 class AdjustmentRepository(IAdjustmentRepository):
-    def create(self, adjustment: Adjustment) -> Adjustment:
+    def create(self, adjustment: Adjustment):
         try:
             event = EventModel.objects.get(id=adjustment.event_id)
             adjust_user = UserModel.objects.get(id=adjustment.adjust_user_id)
@@ -33,7 +33,7 @@ class AdjustmentRepository(IAdjustmentRepository):
             adjustments.delete()
             return None
     
-    def update(self, id: AdjustmentId, adjustment: Adjustment) -> Optional[Adjustment]:
+    def update(self, id: AdjustmentId, adjustment: Adjustment):
         try:
             result = AdjustmentModel.objects.get(id=id)
             result.event = EventModel.objects.get(id=adjustment.event_id)
@@ -70,7 +70,7 @@ class AdjustmentRepository(IAdjustmentRepository):
         except EventModel.DoesNotExist:
             pass
         
-    def get_by_id(self, id: AdjustmentId) -> Adjustment:
+    def get_by_id(self, id: AdjustmentId):
         try:
             result = AdjustmentModel.objects.get(id=id)
             return Adjustment.from_django_model(result)
@@ -78,7 +78,7 @@ class AdjustmentRepository(IAdjustmentRepository):
         except AdjustmentModel.DoesNotExist:
             return None
         
-    def get_by_adjust_user_id(self, user_id: UserId) -> Optional[list]:
+    def get_by_adjust_user_id(self, user_id: UserId):
         try:
             adjust_user = UserModel.objects.get(id=user_id)
             django_result = AdjustmentModel.objects.filter(adjust_user=adjust_user).order_by("created_at")
@@ -87,9 +87,10 @@ class AdjustmentRepository(IAdjustmentRepository):
         except AdjustmentModel.DoesNotExist:
             return None
         
-    def get_by_event_id(self, event_id: EventId) -> Optional[list]:
+    def get_by_event_id(self, event_id: EventId):
         try:
-            django_result = AdjustmentModel.objects.select_related('event').filter(event_id=event_id).order_by("created_at")
+            event = EventModel.objects.get(id=event_id)
+            django_result = AdjustmentModel.objects.filter(event=event).order_by("created_at")
             result = [Adjustment.from_django_model(i) for i in django_result]
             return result
         

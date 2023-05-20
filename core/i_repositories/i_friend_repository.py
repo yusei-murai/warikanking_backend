@@ -6,7 +6,7 @@ from core.entities.user import UserId
 
 class IFriendRepository(ABC):
     @abstractmethod
-    def create(self, friend: Friend) -> Friend:
+    def create(self, friend: Friend) -> Optional[Friend]:
         pass
 
     @abstractmethod

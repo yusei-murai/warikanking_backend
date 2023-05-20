@@ -55,6 +55,11 @@ class EventRepository(IEventRepository):
             return None
         
     def get_by_user_id(self, user_id: UserId) -> Optional[Event]:
-        user = UserModel.objects.prefetch_related('event_set').get(id=user_id)
-        result = [Event.from_django_model(event) for event in user.event_set.order_by('created_at')]
-        return result
+        try:
+            user = UserModel.objects.get(id=user_id)
+            django_result = user.event_set.all().order_by('created_at')
+            result = [Event.from_django_model(i) for i in django_result]
+            return result
+        
+        except EventModel.DoesNotExist:
+            return None

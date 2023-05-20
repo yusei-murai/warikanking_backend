@@ -10,10 +10,8 @@ from data_model.models  import User as UserModel
 from data_model.models  import Pay as PayModel
 from data_model.models  import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
-from django.db import transaction
 
 class PayRepository(IPayRepository):
-    @transaction.atomic
     def create(self, pay: Pay) -> Optional[Pay]:
         try:
             result = None
@@ -93,7 +91,7 @@ class PayRepository(IPayRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('created_at')
+            pay_models = PayModel.objects.select_related('event').filter(user__id=user_id).order_by('created_at')
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
             result = []
@@ -114,7 +112,7 @@ class PayRepository(IPayRepository):
         try:
             pay_models = PayModel.objects.select_related('event').filter(event__id=event_id).order_by('created_at')
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
-
+            
             result = []
             related_users_ids_dict = {pay.id: [] for pay in pay_models}
 
@@ -125,6 +123,6 @@ class PayRepository(IPayRepository):
                 result.append(Pay.from_django_model(pay_model, related_users_ids_dict[pay_model.id]))
 
             return result
-
+        
         except EventModel.DoesNotExist:
             return None

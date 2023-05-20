@@ -3,13 +3,11 @@ from .imports import *
 class RateThrottel(ScopedRateThrottle):
     THROTTLE_RATES = {
         'create_rate': '1/second',
-    }  
+    }
 
 class CreateEventAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -45,8 +43,6 @@ class CreateEventAPIView(views.APIView):
 class CreatePayAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -79,7 +75,6 @@ class CreatePayAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
     
 class GetEventsAPIView(views.APIView):
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -102,7 +97,6 @@ class GetEventsAPIView(views.APIView):
             return Response(json.dumps({"message":"イベントの読み込みに失敗しました"}), status.HTTP_400_BAD_REQUEST)
     
 class GetPaysAPIView(views.APIView):
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -126,7 +120,6 @@ class GetPaysAPIView(views.APIView):
             return Response({"message":"invalid access"}, status.HTTP_400_BAD_REQUEST)
         
 class ReadQrAPIView(views.APIView):
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.data)
@@ -144,7 +137,6 @@ class ReadQrAPIView(views.APIView):
         return Response({"qr_content":result}, status.HTTP_200_OK)
         
 class AdjustEventAPIView(views.APIView):
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
         usecase = AdjustmentEvent()
@@ -165,7 +157,6 @@ class AdjustEventAPIView(views.APIView):
 class RequestFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -202,7 +193,6 @@ class RequestFriendAPIView(views.APIView):
 class ApproveFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -239,7 +229,6 @@ class ApproveFriendAPIView(views.APIView):
 class ApproveFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()

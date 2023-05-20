@@ -7,7 +7,6 @@ from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 #entities
 from core.entities.pay import Pay, AmountPay, RelatedUsers
