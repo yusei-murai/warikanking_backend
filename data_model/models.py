@@ -8,7 +8,7 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     name = models.CharField("イベント名", max_length=255,null=False)
     users = models.ManyToManyField("user.User")
-    created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
+    created_at = models.DateTimeField(null=False)
 
     def __str__(self):
         return self.name
@@ -19,7 +19,7 @@ class Adjustment(models.Model):
     adjust_user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='pay_user',null=False)
     adjusted_user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='paid_user',null=False)
     amount_pay = models.IntegerField("支払い金額",default=0,null=False)
-    created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
+    created_at = models.DateTimeField(null=False)
 
     def __str__(self):
         return str(self.event) + " " + str(self.adjust_user) + " " + str(self.adjusted_user)
@@ -30,7 +30,7 @@ class Pay(models.Model):
     event = models.ForeignKey("Event",on_delete=models.CASCADE,default=1)
     user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1)
     amount_pay = models.IntegerField("支払い金額",default=0,null=False)
-    created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
+    created_at = models.DateTimeField(null=False)
 
     def __str__(self):
         return self.name
@@ -39,7 +39,7 @@ class PayRelatedUser(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     pay = models.ForeignKey("Pay",on_delete=models.CASCADE,default=1)
     user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1)
-    created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
+    created_at = models.DateTimeField(null=False)
 
     def __str__(self):
         return str(self.pay.name) + "-" + str(self.user.name)
@@ -49,7 +49,7 @@ class Friend(models.Model):
     request_user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='request_user',null=False)
     requested_user = models.ForeignKey("user.User",on_delete=models.CASCADE,default=1,related_name='requested_user',null=False)
     approval = models.BooleanField("承認",default=False,null=False)
-    created_at = models.DateTimeField(null=False,default=datetime.datetime.now())
+    created_at = models.DateTimeField(null=False)
 
     def __str__(self):
         return str(self.request_user.name) + "-" + str(self.requested_user.name)

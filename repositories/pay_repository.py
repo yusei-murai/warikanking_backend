@@ -10,8 +10,11 @@ from data_model.models  import User as UserModel
 from data_model.models  import Pay as PayModel
 from data_model.models  import PayRelatedUser as PayRelatedUserModel
 from core.i_repositories.i_pay_repository import IPayRepository
+from django.db import transaction
+
 
 class PayRepository(IPayRepository):
+    @transaction.atomic
     def create(self, pay: Pay) -> Optional[Pay]:
         try:
             result = None
