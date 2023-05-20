@@ -58,8 +58,7 @@ class FriendRepository(IFriendRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            user = UserModel.objects.get(id=user_id)
-            django_result = FriendModel.objects.filter(Q(user_1=user)|Q(user_2=user)).order_by("created_at")
+            django_result = FriendModel.objects.filter(Q(request_user_id=user_id) | Q(requested_user_id=user_id)).order_by("created_at")
             result = [FriendModel.from_django_model(i) for i in django_result]
             return result
         

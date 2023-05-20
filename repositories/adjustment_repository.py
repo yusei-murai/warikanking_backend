@@ -80,8 +80,7 @@ class AdjustmentRepository(IAdjustmentRepository):
         
     def get_by_adjust_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            adjust_user = UserModel.objects.get(id=user_id)
-            django_result = AdjustmentModel.objects.filter(adjust_user=adjust_user).order_by("created_at")
+            django_result = AdjustmentModel.objects.select_related('user').filter(adjust_user_id=user_id).order_by("created_at")
             result = [Adjustment.from_django_model(i) for i in django_result]
             return result
         except AdjustmentModel.DoesNotExist:
@@ -89,8 +88,7 @@ class AdjustmentRepository(IAdjustmentRepository):
         
     def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
-            event = EventModel.objects.get(id=event_id)
-            django_result = AdjustmentModel.objects.filter(event=event).order_by("created_at")
+            django_result = AdjustmentModel.objects.select_related('event').filter(event_id=event_id).order_by("created_at")
             result = [Adjustment.from_django_model(i) for i in django_result]
             return result
         

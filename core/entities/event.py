@@ -73,7 +73,7 @@ class Event:
             
             result.append(adjustment_balance)
             
-            balance[paid_too_much]-= amount
+            balance[paid_too_much] -= amount
             balance[paid_less] += amount
             
         return result
