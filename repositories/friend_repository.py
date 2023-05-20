@@ -13,7 +13,7 @@ import datetime
 from django.db.models import Q
 
 class FriendRepository(IFriendRepository):
-    def create(self, friend: Friend):
+    def create(self, friend: Friend) -> Friend:
         try:
             result = None
             request_user = UserModel.objects.get(id=friend.request_user_id)
@@ -56,7 +56,7 @@ class FriendRepository(IFriendRepository):
             pass
         """
         
-    def get_by_user_id(self, user_id: UserId):
+    def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
             user = UserModel.objects.get(id=user_id)
             django_result = FriendModel.objects.filter(Q(user_1=user)|Q(user_2=user)).order_by("created_at")
