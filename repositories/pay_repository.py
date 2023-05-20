@@ -97,13 +97,13 @@ class PayRepository(IPayRepository):
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
             result = []
-            prelated_users_ids_dict = {pay.id: [] for pay in pay_models}
+            related_users_ids_dict = {pay.id: [] for pay in pay_models}
 
             for related_user in related_users:
-                prelated_users_ids_dict[related_user.pay_id].append(related_user.user_id)
+                related_users_ids_dict[related_user.pay_id].append(related_user.user_id)
 
             for pay_model in pay_models:
-                result.append(Pay.from_django_model(pay_model, prelated_users_ids_dict[pay_model.id]))
+                result.append(Pay.from_django_model(pay_model, related_users_ids_dict[pay_model.id]))
 
             return result
         
@@ -116,13 +116,13 @@ class PayRepository(IPayRepository):
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
             result = []
-            prelated_users_ids_dict = {pay.id: [] for pay in pay_models}
+            related_users_ids_dict = {pay.id: [] for pay in pay_models}
 
             for related_user in related_users:
-                prelated_users_ids_dict[related_user.pay_id].append(related_user.user_id)
+                related_users_ids_dict[related_user.pay_id].append(related_user.user_id)
 
             for pay_model in pay_models:
-                result.append(Pay.from_django_model(pay_model, prelated_users_ids_dict[pay_model.id]))
+                result.append(Pay.from_django_model(pay_model, related_users_ids_dict[pay_model.id]))
 
             return result
 
