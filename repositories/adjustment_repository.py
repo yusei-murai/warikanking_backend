@@ -32,6 +32,25 @@ class AdjustmentRepository(IAdjustmentRepository):
             adjustments = AdjustmentModel.objects.filter(event = event)
             adjustments.delete()
             return None
+        
+    def create_many(self, adjustment_list: list) -> Optional[list]:
+        django_results = []
+        result = []
+        for adjustment in adjustment_list:
+            adjustment_model = AdjustmentModel(
+                id = adjustment.id,
+                event_id = adjustment.event_id,
+                adjust_user_id = adjustment.adjust_user_id,
+                adjusted_user_id = adjustment.adjusted_user_id,
+                amount_pay = adjustment.amount_pay,
+                created_at = datetime.datetime.fromisoformat(adjustment.created_at)
+            )
+
+            django_results.append(adjustment_model)
+            result.append(Adjustment.from_django_model(adjustment_model))
+                
+        AdjustmentModel.objects.bulk_create(django_results)
+        return result
     
     def update(self, id: AdjustmentId, adjustment: Adjustment) -> Optional[Adjustment]:
         try:
@@ -62,8 +81,7 @@ class AdjustmentRepository(IAdjustmentRepository):
         
     def delete_by_event_id(self, event_id: EventId):
         try:
-            event = EventModel.objects.get(id=event_id)
-            AdjustmentModel.objects.filter(event=event).delete()
+            AdjustmentModel.objects.select_related('event').filter(event_id=event_id).delete()
 
         except AdjustmentModel.DoesNotExist:
             pass

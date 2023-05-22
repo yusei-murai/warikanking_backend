@@ -11,6 +11,10 @@ class IAdjustmentRepository(ABC):
     @abstractmethod
     def create(self, adjustment: Adjustment) -> Optional[Adjustment]:
         pass
+    
+    @abstractmethod
+    def create_many(self, adjustment_list: list) -> Optional[list]:
+        pass
 
     @abstractmethod
     def update(self, id: AdjustmentId, adjustment: Adjustment) -> Optional[Adjustment]:

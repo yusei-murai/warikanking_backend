@@ -29,7 +29,8 @@ class AdjustmentService:
                 amount_pay = dict_result['amount_pay'],
                 created_at = datetime.datetime.now().isoformat()
             )
-            self.adjustment_repo.create(adjustment)
             result.append(adjustment)
+            
+        self.adjustment_repo.create_many(result)
         
         return result

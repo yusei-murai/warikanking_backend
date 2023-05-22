@@ -11,3 +11,4 @@ class GetRequestEventSerializer(serializers.Serializer):
 class EventSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
+    created_at = serializers.CharField()

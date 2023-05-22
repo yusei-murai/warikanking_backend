@@ -95,6 +95,7 @@ class PayRepository(IPayRepository):
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
             pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('created_at')
+            #とりあえずPayRelatedUserModelから全てのpayのrelated_userを取得しておく
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
             result = []
@@ -114,16 +115,17 @@ class PayRepository(IPayRepository):
     def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
             pay_models = PayModel.objects.select_related('event').filter(event__id=event_id).order_by('created_at')
+            #とりあえずPayRelatedUserModelから全てのpayのrelated_userを取得しておく
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
             
             result = []
-            related_users_ids_dict = {pay.id: [] for pay in pay_models}
+            related_users_ids = {pay.id: [] for pay in pay_models}
 
             for related_user in related_users:
-                related_users_ids_dict[related_user.pay_id].append(related_user.user_id)
+                related_users_ids[related_user.pay_id].append(related_user.user_id)
 
             for pay_model in pay_models:
-                result.append(Pay.from_django_model(pay_model, related_users_ids_dict[pay_model.id]))
+                result.append(Pay.from_django_model(pay_model, related_users_ids[pay_model.id]))
 
             return result
         
