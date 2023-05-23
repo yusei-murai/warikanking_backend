@@ -1,6 +1,6 @@
 import uuid
 import dataclasses
-from user.models import User as UserModel
+from data_model.models import User as UserModel
 
 @dataclasses.dataclass(frozen=True)
 class UserId:

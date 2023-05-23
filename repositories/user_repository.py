@@ -4,7 +4,7 @@ from typing import Optional
 from core.entities.user import User,UserId
 from core.entities.event import EventId
 from data_model.models import Event as EventModel
-from user.models import User as UserModel
+from data_model.models import User as UserModel
 from core.i_repositories.i_user_repository import IUserRepository
 
 class UserRepository(IUserRepository):

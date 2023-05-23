@@ -1,6 +1,5 @@
 from django.contrib import admin
-from user.models import User
-from data_model.models import Pay, Adjustment, PayRelatedUser, Event, Friend
+from data_model.models import Pay, Adjustment, PayRelatedUser, Event, Friend, User
 
 class UserAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
