@@ -94,7 +94,7 @@ class PayRepository(IPayRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('created_at')
+            pay_models = PayModel.objects.select_related('user').filter(user__id=user_id).order_by('-created_at')
             #とりあえずPayRelatedUserModelから全てのpayのrelated_userを取得しておく
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
 
@@ -114,7 +114,7 @@ class PayRepository(IPayRepository):
         
     def get_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
-            pay_models = PayModel.objects.select_related('event').filter(event__id=event_id).order_by('created_at')
+            pay_models = PayModel.objects.select_related('event').filter(event__id=event_id).order_by('-created_at')
             #とりあえずPayRelatedUserModelから全てのpayのrelated_userを取得しておく
             related_users = PayRelatedUserModel.objects.filter(pay__in=pay_models).order_by('pay__created_at')
             

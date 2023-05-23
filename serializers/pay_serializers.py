@@ -18,3 +18,4 @@ class PaySerializer(serializers.Serializer):
     user_id = serializers.UUIDField()
     amount_pay = serializers.IntegerField()
     related_users = serializers.ListField(child = serializers.UUIDField())
+    created_at = serializers.CharField()

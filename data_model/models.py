@@ -3,6 +3,11 @@ from django.db import models
 from user.models import User
 from django.utils import timezone
 import datetime
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager
+from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+
+
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)

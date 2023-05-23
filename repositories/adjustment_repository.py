@@ -17,9 +17,9 @@ class AdjustmentRepository(IAdjustmentRepository):
             
             result = AdjustmentModel.objects.create(
                 id = adjustment.id,
-                event = event,
-                adjust_user = adjust_user,
-                adjusted_user = adjusted_user,
+                event_id = adjustment.event_id,
+                adjust_user_id = adjust_user,
+                adjusted_user_id = adjusted_user,
                 amount_pay = adjustment.amount_pay,
                 created_at = datetime.datetime.fromisoformat(adjustment.created_at)
             )

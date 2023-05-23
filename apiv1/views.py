@@ -144,7 +144,7 @@ class ReadQrAPIView(views.APIView):
 class AdjustEventAPIView(views.APIView):
     #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         usecase = AdjustmentEvent()
         event_id = self.kwargs.get('event_id')
         

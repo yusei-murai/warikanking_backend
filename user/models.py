@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     email = models.EmailField("メールアドレス", max_length=255, unique=True)
-    name = models.CharField("名前", max_length=255, unique=False)
+    name = models.CharField("名前", max_length=255, unique=False, null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -47,3 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
