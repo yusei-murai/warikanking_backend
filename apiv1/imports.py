@@ -14,6 +14,7 @@ from core.entities.pay import Pay, AmountPay, RelatedUsers
 from core.entities.event import Event, EventName
 from core.entities.qr import Qr
 from core.entities.friend import Friend,Approval
+from core.entities.user import User, UserId
 
 #use_cases
 from core.use_cases.create_pay import CreatePay
@@ -24,6 +25,7 @@ from core.use_cases.read_qr import ReadQr
 from core.use_cases.adjust_event import AdjustmentEvent
 from core.use_cases.request_friend import RequestFriend
 from core.use_cases.approve_friend import ApproveFriend
+from core.use_cases.convert_user_id_name import ConvertUserIdName
 
 #serializers
 from serializers.event_serializers import EventSerializer, RequestEventSerializer, GetRequestEventSerializer

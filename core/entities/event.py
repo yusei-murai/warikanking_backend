@@ -5,7 +5,7 @@ from data_model.models import Event as EventModel
 
 @dataclasses.dataclass(frozen=True)
 class EventId:
-    name: uuid.UUID
+    id: uuid.UUID
 
 @dataclasses.dataclass(frozen=True)
 class EventName:
@@ -32,7 +32,7 @@ class Event:
 
         for item in pays:
             user_id = item.user_id
-            amount_pay = item.amount_pay
+            amount_pay = int(item.amount_pay)
             related_users = item.related_users
             
             if len(related_users) != len(set(related_users)):

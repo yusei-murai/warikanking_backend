@@ -97,7 +97,7 @@ class GetEventsAPIView(views.APIView):
         
             return Response(result, status.HTTP_200_OK)
         except:
-            return Response(json.dumps({"message":"イベントの読み込みに失敗しました"}), status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"イベントの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
     
 class GetPaysAPIView(views.APIView):
     #authentication_classes = [JWTAuthentication]
@@ -258,3 +258,24 @@ class ApproveFriendAPIView(views.APIView):
         result = vars(result)
         
         return Response(result, status.HTTP_201_CREATED)
+    
+class ConvertUserIdNameAPIView(views.APIView):
+    #authentication_classes = [JWTAuthentication]
+    #permission_classes = [IsAuthenticated] 
+    def get(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        user_repo: IUserRepository = factory.create_user_repository()
+
+        usecase = ConvertUserIdName(user_repo)
+
+        try:
+            user_id = UserId(self.kwargs.get('user_id')).id
+            result = usecase.convert_user_id_name(user_id)
+            
+            if result == None:
+                return Response({"message":"ユーザが見つかりません"}, status.HTTP_400_BAD_REQUEST)
+        
+            return Response({"user_id":result}, status.HTTP_200_OK)
+        
+        except ValueError as e:
+            return Response({"message":e}, status.HTTP_400_BAD_REQUEST)

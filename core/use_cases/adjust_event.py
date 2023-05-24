@@ -11,5 +11,6 @@ class AdjustmentEvent:
         adjustment_repo: IAdjustmentRepository = factory.create_adjustment_repository()
         
         service = AdjustmentService(pay_repo,adjustment_repo)
+        result = service.adjust(event_id)
 
-        return service.adjust(event_id)
+        return result
