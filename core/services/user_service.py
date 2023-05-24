@@ -15,3 +15,8 @@ class UserService:
         name = result.name
         
         return name
+    
+    def mapping_user_id_name(self, users: list):
+        user_mapping = {user.id: user.name for user in users}
+        
+        return user_mapping

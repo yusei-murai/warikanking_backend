@@ -16,6 +16,9 @@ from core.entities.qr import Qr
 from core.entities.friend import Friend,Approval
 from core.entities.user import User, UserId
 
+#services
+from core.services.user_service import UserService
+
 #use_cases
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent

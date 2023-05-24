@@ -105,18 +105,36 @@ class GetPaysAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         pay_repo: IPayRepository = factory.create_pay_repository()
+        user_repo: IUserRepository = factory.create_user_repository()
 
         usecase = GetPays(pay_repo)
+        user_service = UserService(user_repo)
         event_id = self.kwargs.get('event_id')
 
         try:
             event_id = uuid.UUID(event_id)
             results = usecase.get_pays(event_id)
- 
-            result = [PaySerializer(i).data for i in results]
             
-            if not result:
-                return Response(result, status.HTTP_204_NO_CONTENT)
+            if not results:
+                return Response(results, status.HTTP_204_NO_CONTENT)
+            
+            #eventの中のuserを全て取り出し、{user_id:name}にマッピング
+            event_users_list = user_repo.get_all_by_event_id(results[0].event_id)
+            user_ids_name = user_service.mapping_user_id_name(event_users_list)
+ 
+            result = [{
+                "id": i.id,
+                "name": i.name,
+                "event_id": i.event_id,
+                "user": {
+                    "user_id": i.user_id,
+                    "user_name": user_ids_name[i.user_id]
+                },
+                "amount_pay": i.amount_pay,
+                "related_users": [{"user_id": user_id, "user_name": user_ids_name[user_id]} for user_id in i.related_users],
+                "created_at": i.created_at
+            } 
+            for i in results]
         
             return Response(result, status.HTTP_200_OK)
         
@@ -145,7 +163,11 @@ class AdjustEventAPIView(views.APIView):
     #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        user_repo: IUserRepository = factory.create_user_repository()
         usecase = AdjustmentEvent()
+        user_service = UserService(user_repo)
+        
         event_id = self.kwargs.get('event_id')
         
         results = usecase.adjust_event(event_id)
@@ -153,7 +175,20 @@ class AdjustEventAPIView(views.APIView):
         if results == None:
             return Response({"message":"支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
         
-        result = [vars(i) for i in results]
+        #eventの中のuserを全て取り出し、{user_id:name}にマッピング
+        event_users_list = user_repo.get_all_by_event_id(results[0].event_id)
+        user_ids_name = user_service.mapping_user_id_name(event_users_list)
+        
+        result = [{
+            "id": i.id,
+            "event_id": i.event_id,
+            "adjust_user": {"adjust_user_id": i.adjust_user_id, "adjust_user_name": user_ids_name[i.adjust_user_id]},
+            "adjusted_user": {"adjusted_user_id": i.adjusted_user_id, "adjusted_user_name": user_ids_name[i.adjusted_user_id]},
+            "amount_pay": i.amount_pay,
+            "created_at": i.created_at
+        } for i in results]
+        
+        print(result)
         
         if not result:
             return Response({"message":"計算に失敗しました"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -164,7 +199,7 @@ class RequestFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
     #authentication_classes = [JWTAuthentication]
-    #permission_classes = [IsAuthenticated] 
+    #permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         friend_repo: IFriendRepository = factory.create_friend_repository()

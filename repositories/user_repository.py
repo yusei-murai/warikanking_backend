@@ -15,15 +15,23 @@ class UserRepository(IUserRepository):
         
         except UserModel.DoesNotExist:
             return None
+        
+    def get_users_by_ids(self, user_ids: list) -> Optional[list]:
+        try:
+            result = [User.from_django_model(user) for user in UserModel.objects.filter(id__in=user_ids)]
+            return result
+        
+        except UserModel.DoesNotExist:
+            return None
     
     def get_all_by_event_id(self, event_id: EventId) -> Optional[list]:
         try:
             result = []
-            event = EventModel.objects.get(id=event_id)
+            event = EventModel.objects.prefetch_related('users').get(id=event_id)
             users = event.users.all()
 
             result = [User.from_django_model(user) for user in users]
 
             return result
-        except EventModel.DoesNotExist:
+        except EventModel.DoesNotExist as e:
             return None
