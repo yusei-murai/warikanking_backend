@@ -263,10 +263,7 @@ class ConvertUserIdNameAPIView(views.APIView):
     #authentication_classes = [JWTAuthentication]
     #permission_classes = [IsAuthenticated] 
     def get(self, request, *args, **kwargs):
-        factory = RepositoryFactory()
-        user_repo: IUserRepository = factory.create_user_repository()
-
-        usecase = ConvertUserIdName(user_repo)
+        usecase = ConvertUserIdName()
 
         try:
             user_id = UserId(self.kwargs.get('user_id')).id
