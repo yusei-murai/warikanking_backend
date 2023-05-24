@@ -121,6 +121,9 @@ class GetPaysAPIView(views.APIView):
             #eventの中のuserを全て取り出し、{user_id:name}にマッピング
             event_users_list = user_repo.get_all_by_event_id(results[0].event_id)
             user_ids_name = user_service.mapping_user_id_name(event_users_list)
+            
+            if not user_ids_name:
+                return Response({"message":"支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
  
             result = [{
                 "id": i.id,
@@ -178,6 +181,9 @@ class AdjustEventAPIView(views.APIView):
         #eventの中のuserを全て取り出し、{user_id:name}にマッピング
         event_users_list = user_repo.get_all_by_event_id(results[0].event_id)
         user_ids_name = user_service.mapping_user_id_name(event_users_list)
+        
+        if not user_ids_name:
+            return Response({"message":"支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
         
         result = [{
             "id": i.id,
