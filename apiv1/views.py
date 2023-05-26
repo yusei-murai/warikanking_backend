@@ -194,8 +194,6 @@ class AdjustEventAPIView(views.APIView):
             "created_at": i.created_at
         } for i in results]
         
-        print(result)
-        
         if not result:
             return Response({"message":"計算に失敗しました"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
         
