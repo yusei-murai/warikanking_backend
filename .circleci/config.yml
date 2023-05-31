@@ -8,7 +8,11 @@ jobs:
       - setup_remote_docker:
           version: 20.10.7
       - run:
-          name: Build and test Django project
-          command: |
-            docker-compose build
-            docker-compose run web python manage.py test
+          name: docker-compose up
+          command: docker-compose up -d
+      - run:
+          name: test
+          command: docker-compose run python ./manage.py test
+      - run:
+          name: docker-compose down
+          command: docker-compose down
