@@ -8,6 +8,11 @@ jobs:
       - setup_remote_docker:
           version: 20.10.7
       - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/3.8/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+      - run:
           name: docker-compose up
           command: docker-compose up -d
       - run:
