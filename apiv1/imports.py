@@ -10,10 +10,10 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 #entities
-from core.entities.pay import Pay, AmountPay, RelatedUsers
-from core.entities.event import Event, EventName
-from core.entities.qr import Qr
-from core.entities.friend import Friend,Approval
+from core.entities.pay import Pay, AmountPay, RelatedUsers, PayName, PayId
+from core.entities.event import Event, EventName, EventId
+from core.entities.qr import Qr, QrId
+from core.entities.friend import Friend,Approval, FriendId
 from core.entities.user import User, UserId
 
 #services
@@ -29,6 +29,7 @@ from core.use_cases.adjust_event import AdjustmentEvent
 from core.use_cases.request_friend import RequestFriend
 from core.use_cases.approve_friend import ApproveFriend
 from core.use_cases.convert_user_id_name import ConvertUserIdName
+from core.use_cases.get_users_dict_by_event import GetUsersDictByEventId
 
 #serializers
 from serializers.event_serializers import EventSerializer, RequestEventSerializer, GetRequestEventSerializer

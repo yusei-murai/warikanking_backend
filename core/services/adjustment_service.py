@@ -14,7 +14,7 @@ class AdjustmentService:
     def adjust(self, event_id: EventId):
         with transaction.atomic():
             result = []
-            self.adjustment_repo.delete_by_event_id(event_id) #元々のadjustmentを全て削除
+            #self.adjustment_repo.delete_by_event_id(event_id) 元々のadjustmentを全て削除　DBに保存する場合
             pays = self.pay_repo.get_by_event_id(event_id)
             
             dict_results = Event.adjust(event_id,pays) #return->dict
@@ -33,6 +33,6 @@ class AdjustmentService:
                 )
                 result.append(adjustment)
                 
-            self.adjustment_repo.create_many(result)
+            #self.adjustment_repo.create_many(result) DBに登録する場合
             
             return result

@@ -17,6 +17,6 @@ class UserService:
         return name
     
     def mapping_user_id_name(self, users: list):
-        user_mapping = {user.id: user.name for user in users if type(user) is User}
+        user_mapping = {str(user.id): user.name for user in users if type(user) is User}
   
         return user_mapping
