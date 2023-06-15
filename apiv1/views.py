@@ -122,7 +122,7 @@ class GetPaysAPIView(views.APIView):
         factory = RepositoryFactory()
         pay_repo: IPayRepository = factory.create_pay_repository()
         user_repo: IUserRepository = factory.create_user_repository()
-        
+
         get_pay_usecase = GetPays(pay_repo)
         user_ids_mapping_usecase = GetUsersDictByEventId(user_repo)
 
@@ -136,11 +136,11 @@ class GetPaysAPIView(views.APIView):
                 return Response(results, status.HTTP_204_NO_CONTENT)
 
             # eventの中のuserを全て取り出し、{user_id:name}にマッピング
-            user_ids_name = user_ids_mapping_usecase.get_users_dict_by_event_id(results[0].event_id)
+            user_ids_name = user_ids_mapping_usecase.get_users_dict_by_event_id(
+                results[0].event_id)
 
             if not user_ids_name:
                 return Response({"message": "支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
-            print(user_ids_name)
 
             result = [{
                 "id": i.id,
@@ -199,7 +199,8 @@ class AdjustEventAPIView(views.APIView):
             return Response({"message": "支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
 
         # eventの中のuserを全て取り出し、{user_id:name}にマッピング
-        user_ids_name = user_ids_mapping_usecase.get_users_dict_by_event_id(event_id)
+        user_ids_name = user_ids_mapping_usecase.get_users_dict_by_event_id(
+            event_id)
 
         if not user_ids_name:
             return Response({"message": "支払いがないか、不正なパラメータ"}, status.HTTP_400_BAD_REQUEST)
@@ -241,7 +242,8 @@ class RequestFriendAPIView(views.APIView):
             friend = Friend(
                 id=FriendId(uuid.uuid4()).id,
                 request_user_id=UserId(validated_data['request_user_id']).id,
-                requested_user_id=UserId(validated_data['requested_user_id']).id,
+                requested_user_id=UserId(
+                    validated_data['requested_user_id']).id,
                 approval=approval,
                 created_at=datetime.datetime.now().isoformat()
             )
@@ -282,8 +284,8 @@ class ApproveFriendAPIView(views.APIView):
         approval = Approval(False)
         friend = Friend(
             id=uuid.uuid4(),
-            request_user_id=validated_data['request_user_id'],
-            requested_user_id=validated_data['requested_user_id'],
+            request_user_id=UserId(validated_data['request_user_id']).id,
+            requested_user_id=UserId(validated_data['requested_user_id']).id,
             approval=approval,
             created_at=datetime.datetime.now().isoformat()
         )
@@ -301,31 +303,52 @@ class ApproveFriendAPIView(views.APIView):
         return Response(result, status.HTTP_201_CREATED)
 
 
-class ApproveFriendAPIView(views.APIView):
+class GetFriendsAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        result = []
         factory = RepositoryFactory()
         friend_repo: IFriendRepository = factory.create_friend_repository()
 
-        usecase = ApproveFriend(friend_repo)
+        user_id = self.kwargs.get('user_id')
+        usecase = GetFriends(friend_repo)
 
-        friend_id = self.kwargs.get('friend_id')
+        results = usecase.get_friend(user_id)
 
-        result = usecase.approve_friend(friend_id)
-
-        if result == None:
+        if results == None:
             return Response({"message": "不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
 
-        if type(result) is str:
-            return Response({"message": result}, status.HTTP_400_BAD_REQUEST)
+        if type(results) is str:
+            return Response({"message": results}, status.HTTP_400_BAD_REQUEST)
 
-        result = vars(result)
+        if not results:
+            return Response(results, status.HTTP_204_NO_CONTENT)
+        
+        for friend in results:
+            print(friend)
+            #user_idじゃない方がfriendのuser_id
+            if str(friend.requested_user_id) == user_id:
+                result.append({
+                "friend_user": {
+                    "friend_user_id": friend.request_user_id,
+                    "friend_user_name": friend.request_user_name,
+                },
+                "created_at": friend.created_at
+                })
+            elif str(friend.request_user_id) == user_id:
+                result.append({
+                "friend_user": {
+                    "friend_user_id": friend.requested_user_id,
+                    "friend_user_name": friend.requested_user_name,
+                },
+                "created_at": friend.created_at
+                })
 
-        return Response(result, status.HTTP_201_CREATED)
+        return Response(result, status.HTTP_200_OK)
 
 
 class ConvertUserIdNameAPIView(views.APIView):

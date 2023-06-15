@@ -28,6 +28,7 @@ from core.use_cases.read_qr import ReadQr
 from core.use_cases.adjust_event import AdjustmentEvent
 from core.use_cases.request_friend import RequestFriend
 from core.use_cases.approve_friend import ApproveFriend
+from core.use_cases.get_friends import GetFriends
 from core.use_cases.convert_user_id_name import ConvertUserIdName
 from core.use_cases.get_users_dict_by_event import GetUsersDictByEventId
 

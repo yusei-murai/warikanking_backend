@@ -1,7 +1,7 @@
 import uuid
 import dataclasses
 from data_model.models import Friend as FriendModel
-from core.entities.user import UserId
+from core.entities.user import UserId, UserName
 
 @dataclasses.dataclass(frozen=True)
 class FriendId:
@@ -39,3 +39,13 @@ class Friend:
             approval = friend_model.approval,
             created_at = friend_model.created_at.isoformat()
         )
+        
+class FriendDTO:
+    def __init__(self, id: FriendId, request_user_id: UserId, requested_user_id: UserId, request_user_name: UserName, requested_user_name: UserName, approval: Approval, created_at: FriendCreatedAt):
+        self.id = id
+        self.request_user_id = request_user_id
+        self.requested_user_id = requested_user_id
+        self.request_user_name = request_user_name
+        self.requested_user_name = requested_user_name
+        self.approval = approval
+        self.created_at = created_at

@@ -113,6 +113,9 @@ class Friend(models.Model):
         "User", on_delete=models.CASCADE, default=1, related_name='requested_user', null=False)
     approval = models.BooleanField("承認", default=False, null=False)
     created_at = models.DateTimeField(null=False)
+    
+    class Meta:
+        unique_together = ['request_user', 'requested_user']
 
     def __str__(self):
         return str(self.request_user.name) + "-" + str(self.requested_user.name)

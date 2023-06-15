@@ -1,7 +1,7 @@
 from core.entities.adjustment import Adjustment, AdjustmentId
 from core.entities.user import UserId
 from core.entities.event import EventId
-from core.entities.friend import Friend, FriendId, Approval
+from core.entities.friend import Friend, FriendId, Approval, FriendDTO
 from core.i_repositories.i_adjustment_repository import IAdjustmentRepository
 from core.i_repositories.i_friend_repository import IFriendRepository
 from data_model.models import Adjustment as AdjustmentModel
@@ -58,8 +58,17 @@ class FriendRepository(IFriendRepository):
         
     def get_by_user_id(self, user_id: UserId) -> Optional[list]:
         try:
-            django_result = FriendModel.objects.filter(Q(request_user_id=user_id) | Q(requested_user_id=user_id)).order_by("-created_at")
-            result = [FriendModel.from_django_model(i) for i in django_result]
+            django_result = FriendModel.objects.select_related('request_user', 'requested_user').filter(Q(request_user_id=user_id) | Q(requested_user_id=user_id)).order_by("-created_at")
+            result = [FriendDTO(
+                id = i.id,
+                request_user_id = i.request_user.id,
+                requested_user_id = i.requested_user.id,
+                approval = i.approval,
+                created_at = i.created_at,
+                request_user_name = i.request_user.name,
+                requested_user_name = i.requested_user.name,
+            ) for i in django_result]
+            
             return result
         
         except UserModel.DoesNotExist:
