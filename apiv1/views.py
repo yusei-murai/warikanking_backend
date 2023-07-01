@@ -25,7 +25,7 @@ class CreateEventAPIView(views.APIView):
             serializer = RequestEventSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             validated_data = serializer.validated_data
-
+            
             event = Event(
                 id=EventId(uuid.uuid4()).id,
                 name=EventName(validated_data['name']).name,
@@ -44,6 +44,38 @@ class CreateEventAPIView(views.APIView):
             serializer = EventSerializer(result)
 
             return Response(serializer.data, status.HTTP_201_CREATED)
+
+        except ValueError as e:
+            return Response({"message": str(e)}, status.HTTP_400_BAD_REQUEST)
+
+
+class AddUserEventAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        try:
+            factory = RepositoryFactory()
+            event_repo: IEventRepository = factory.create_event_repository()
+
+            usecase = AddUsersEvent(event_repo)
+            data = request.data
+
+            serializer = AddUsersEventSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            validated_data = serializer.validated_data
+
+            result = usecase.add_users_event(
+                validated_data['event_id'],
+                user_ids=list(validated_data['user_ids'])
+            )
+
+            if result is None:
+                return Response({"message": "不正なリクエストです"}, status.HTTP_400_BAD_REQUEST)
+
+            return Response({"event_id":validated_data['event_id'], "user_ids": result}, status.HTTP_200_OK)
 
         except ValueError as e:
             return Response({"message": str(e)}, status.HTTP_400_BAD_REQUEST)
@@ -304,8 +336,6 @@ class ApproveFriendAPIView(views.APIView):
 
 
 class GetFriendsAPIView(views.APIView):
-    throttle_classes = [RateThrottel]
-    throttle_scope = 'create_rate'
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [IsAuthenticated]
 

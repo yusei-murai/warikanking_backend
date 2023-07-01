@@ -11,7 +11,7 @@ class IEventRepository(ABC):
         pass
 
     @abstractmethod
-    def add_users_to_event(self, event: Event, users: list):
+    def add_users_to_event(self, event_id: EventId, users: list):
         pass
 
     @abstractmethod

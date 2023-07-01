@@ -38,6 +38,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_identifier = models.CharField("ユーザID", max_length=255, unique=True, null=False, default=uuid.uuid4())
     email = models.EmailField("メールアドレス", max_length=255, unique=True)
     name = models.CharField("名前", max_length=255, unique=False, null=False)
     is_active = models.BooleanField(default=True)
@@ -45,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['name','user_identifier']
 
     objects = UserManager()
 

@@ -18,13 +18,16 @@ class EventRepository(IEventRepository):
         
         return Event.from_django_model(result)
     
-    def add_users_to_event(self, event: Event, users: list):
+    def add_users_to_event(self, id: EventId, users: list):
         try:
-            event = EventModel.objects.get(id=event.id)
+            result = []
+            event = EventModel.objects.get(id=id)
             for i in users:
                 user = UserModel.objects.get(id=i.id)
                 event.users.add(user)
+                result.append(user)
                 
+            return result
         except EventModel.DoesNotExist:
             return None
     
