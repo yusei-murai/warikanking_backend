@@ -63,6 +63,7 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField("イベント名", max_length=255, null=False)
     users = models.ManyToManyField("User")
+    is_confirmed = models.BooleanField("確定", default=False, null=False)
     created_at = models.DateTimeField(null=False)
 
     def __str__(self):

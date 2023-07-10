@@ -11,7 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 #entities
 from core.entities.pay import Pay, AmountPay, RelatedUsers, PayName, PayId
-from core.entities.event import Event, EventName, EventId
+from core.entities.event import Event, EventName, EventId, IsConfirmed
 from core.entities.qr import Qr, QrId
 from core.entities.friend import Friend,Approval, FriendId
 from core.entities.user import User, UserId

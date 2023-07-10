@@ -13,6 +13,7 @@ class EventRepository(IEventRepository):
         result = EventModel.objects.create(
             id = event.id,
             name = event.name,
+            is_confirmed = event.is_confirmed,
             created_at = datetime.datetime.fromisoformat(event.created_at)
         )
         

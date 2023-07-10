@@ -10,8 +10,8 @@ class RateThrottel(ScopedRateThrottle):
 class CreateEventAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -29,6 +29,7 @@ class CreateEventAPIView(views.APIView):
             event = Event(
                 id=EventId(uuid.uuid4()).id,
                 name=EventName(validated_data['name']).name,
+                is_confirmed=IsConfirmed(False).is_confirmed,
                 created_at=datetime.datetime.now().isoformat()
             )
 
@@ -52,8 +53,8 @@ class CreateEventAPIView(views.APIView):
 class AddUserEventAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         try:
@@ -84,8 +85,8 @@ class AddUserEventAPIView(views.APIView):
 class CreatePayAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -124,8 +125,8 @@ class CreatePayAPIView(views.APIView):
 
 
 class GetEventsAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         event_repo: IEventRepository = factory.create_event_repository()
@@ -148,8 +149,8 @@ class GetEventsAPIView(views.APIView):
 
 
 class GetPaysAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         pay_repo: IPayRepository = factory.create_pay_repository()
@@ -195,8 +196,8 @@ class GetPaysAPIView(views.APIView):
 
 
 class ReadQrAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         data = json.loads(request.data)
 
@@ -214,8 +215,8 @@ class ReadQrAPIView(views.APIView):
 
 
 class AdjustEventAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         user_repo: IUserRepository = factory.create_user_repository()
@@ -255,8 +256,8 @@ class AdjustEventAPIView(views.APIView):
 class RequestFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -299,8 +300,8 @@ class RequestFriendAPIView(views.APIView):
 class ApproveFriendAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         factory = RepositoryFactory()
@@ -336,8 +337,8 @@ class ApproveFriendAPIView(views.APIView):
 
 
 class GetFriendsAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         result = []
@@ -359,7 +360,6 @@ class GetFriendsAPIView(views.APIView):
             return Response(results, status.HTTP_204_NO_CONTENT)
         
         for friend in results:
-            print(friend)
             #user_idじゃない方がfriendのuser_id
             if str(friend.requested_user_id) == user_id:
                 result.append({
@@ -382,8 +382,8 @@ class GetFriendsAPIView(views.APIView):
 
 
 class ConvertUserIdNameAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         usecase = ConvertUserIdName()
 
@@ -401,8 +401,8 @@ class ConvertUserIdNameAPIView(views.APIView):
 
 
 class GetUsersDictByEventIdAPIView(views.APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         factory = RepositoryFactory()
         user_repo: IUserRepository = factory.create_user_repository()

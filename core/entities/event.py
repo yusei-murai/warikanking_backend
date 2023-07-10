@@ -14,12 +14,17 @@ class EventName:
 @dataclasses.dataclass(frozen=True)
 class EventCreatedAt:
     created_at: str
+    
+@dataclasses.dataclass(frozen=True)
+class IsConfirmed:
+    is_confirmed: bool
 
 class Event:
-    def __init__(self, id: EventId, name: EventName, created_at:EventCreatedAt):
+    def __init__(self, id: EventId, name: EventName, is_confirmed: IsConfirmed, created_at:EventCreatedAt):
         self.id = id
         self.name = name
         self.created_at = created_at
+        self.is_confirmed = is_confirmed
 
     @classmethod
     def adjust(cls,event_id: EventId, pays: list):
@@ -86,6 +91,7 @@ class Event:
         return Event(
             id = event_model.id,
             name = event_model.name,
+            is_confirmed = event_model.is_confirmed,
             created_at = event_model.created_at.isoformat()
             #user_ids = user_ids
         )
