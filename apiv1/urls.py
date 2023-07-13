@@ -9,6 +9,7 @@ urlpatterns = [
     path('events/<str:event_id>/users/', views.GetUsersDictByEventIdAPIView.as_view(), name="get-users"),
     path('events/<str:event_id>/pays/', views.GetPaysAPIView.as_view(), name="get-pays"),
     path('events/<str:event_id>/adjustment/', views.AdjustEventAPIView.as_view(), name="adjust-events"),
+    path('events/<str:event_id>/confirmation/', views.ConfirmEventAPIView.as_view(), name="confirm-events"),
     path('pays/', views.CreatePayAPIView.as_view(), name="create-pay"),
     path('users/<str:user_id>/events/', views.GetEventsAPIView.as_view(), name="get-events"),
     path('users/<str:user_id>/name/', views.ConvertUserIdNameAPIView.as_view(), name="convert-user-id-name"),
