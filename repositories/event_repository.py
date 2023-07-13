@@ -2,7 +2,7 @@ import uuid
 from typing import Optional
 import datetime
 
-from core.entities.event import Event,EventId
+from core.entities.event import Event,EventId,IsConfirmed
 from core.entities.user import UserId
 from data_model.models  import Event as EventModel
 from data_model.models import User as UserModel
@@ -36,6 +36,17 @@ class EventRepository(IEventRepository):
         try:
             result = EventModel.objects.get(id=id)
             result.name = event.name
+            result.is_confirmed = event.is_confirmed
+            result.save()
+            return EventModel.from_django_model(result)
+        
+        except EventModel.DoesNotExist:
+            return None
+        
+    def update_is_confirmed(self, id: EventId, is_confirmed: IsConfirmed) -> Optional[Event]:
+        try:
+            result = EventModel.objects.get(id=id)
+            result.is_confirmed = is_confirmed
             result.save()
             return EventModel.from_django_model(result)
         

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from core.entities.friend import Friend, FriendId
+from core.entities.friend import Friend, FriendId, Approval
 from core.entities.user import UserId
 
 class IFriendRepository(ABC):
@@ -10,7 +10,7 @@ class IFriendRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: FriendId, friend: Friend) -> Optional[Friend]:
+    def update(self, id: FriendId, approval: Approval) -> Optional[Friend]:
         pass
 
     @abstractmethod

@@ -48,6 +48,35 @@ class CreateEventAPIView(views.APIView):
 
         except ValueError as e:
             return Response({"message": str(e)}, status.HTTP_400_BAD_REQUEST)
+        
+
+class ConfirmEventAPIView(views.APIView):
+    throttle_classes = [RateThrottel]
+    throttle_scope = 'create_rate'
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        try:
+            factory = RepositoryFactory()
+            event_repo: IEventRepository = factory.create_event_repository()
+
+            usecase = ConfirmEvent(event_repo)
+
+            event_id = self.kwargs.get('event_id')
+
+            result = usecase.confirm_event(event_id)
+
+            if result is not None:
+                message = json.dumps({"message": result}, ensure_ascii=False)
+                return Response(message, status.HTTP_400_BAD_REQUEST)
+
+            serializer = EventSerializer(result)
+
+            return Response(serializer.data, status.status.HTTP_200_OK)
+
+        except ValueError as e:
+            return Response({"message": str(e)}, status.HTTP_400_BAD_REQUEST)
 
 
 class AddUserEventAPIView(views.APIView):

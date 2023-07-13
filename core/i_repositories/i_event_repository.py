@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import uuid
 from typing import Optional
 
-from core.entities.event import Event,EventId
+from core.entities.event import Event,EventId,IsConfirmed
 from core.entities.user import UserId
 
 class IEventRepository(ABC):
@@ -16,6 +16,10 @@ class IEventRepository(ABC):
 
     @abstractmethod
     def update(self, id: EventId, event: Event) -> Optional[Event]:
+        pass
+    
+    @abstractmethod
+    def update_is_confirmed(self, id: EventId, is_confirmed: IsConfirmed) -> Optional[Event]:
         pass
 
     @abstractmethod

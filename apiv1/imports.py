@@ -32,6 +32,7 @@ from core.use_cases.get_friends import GetFriends
 from core.use_cases.convert_user_id_name import ConvertUserIdName
 from core.use_cases.get_users_dict_by_event import GetUsersDictByEventId
 from core.use_cases.add_users_event import AddUsersEvent
+from core.use_cases.confirm_event import ConfirmEvent
 
 #serializers
 from serializers.event_serializers import EventSerializer, RequestEventSerializer, GetRequestEventSerializer, AddUsersEventSerializer
