@@ -1,6 +1,7 @@
 import uuid
 import dataclasses
 from data_model.models import User as UserModel
+import re
 
 @dataclasses.dataclass(frozen=True)
 class UserId:
@@ -10,9 +11,18 @@ class UserId:
 class Email:
     email: str
     
+    def __post_init__(self):
+        pattern = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(pattern, self.email):
+            raise ValueError("invalid email")
+    
 @dataclasses.dataclass(frozen=True)
 class UserName:
     name: str
+    
+    def __post_init__(self):
+        if len(self.name) > 20:
+            raise ValueError("invalid length")
 
 class User:
     def __init__(self, id: UserId, email: Email, name: UserName, is_active: bool, is_staff: bool):

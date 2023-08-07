@@ -12,6 +12,10 @@ class PayId:
 class PayName:
     name: str
     
+    def __post_init__(self):
+        if len(self.name) > 20:
+            raise ValueError("invalid length")
+    
 @dataclasses.dataclass(frozen=True)
 class AmountPay:
     amount_pay: int

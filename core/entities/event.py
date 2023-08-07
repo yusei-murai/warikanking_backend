@@ -10,6 +10,11 @@ class EventId:
 @dataclasses.dataclass(frozen=True)
 class EventName:
     name: str
+    
+    def __post_init__(self):
+        if len(self.name) > 20:
+            raise ValueError("invalid length")
+        
         
 @dataclasses.dataclass(frozen=True)
 class EventCreatedAt:
