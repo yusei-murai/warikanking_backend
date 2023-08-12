@@ -22,6 +22,7 @@ from core.services.user_service import UserService
 #use_cases
 from core.use_cases.create_pay import CreatePay
 from core.use_cases.create_event import CreateEvent
+from core.use_cases.get_event import GetEvent
 from core.use_cases.get_events import GetEvents
 from core.use_cases.get_pays import GetPays
 from core.use_cases.read_qr import ReadQr

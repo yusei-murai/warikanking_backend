@@ -21,7 +21,7 @@ class UserName:
     name: str
     
     def __post_init__(self):
-        if len(self.name) > 20:
+        if len(self.name) > 10:
             raise ValueError("invalid length")
 
 class User:

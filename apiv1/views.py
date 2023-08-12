@@ -175,6 +175,26 @@ class GetEventsAPIView(views.APIView):
             return Response(result, status.HTTP_200_OK)
         except:
             return Response({"message": "イベントの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
+        
+class GetEventAPIView(views.APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        factory = RepositoryFactory()
+        event_repo: IEventRepository = factory.create_event_repository()
+
+        usecase = GetEvent(event_repo)
+        event_id = self.kwargs.get('event_id')
+
+        try:
+            result = EventSerializer(usecase.get_event(event_id)).data
+
+            if not result:
+                return Response(result, status.HTTP_204_NO_CONTENT)
+
+            return Response(result, status.HTTP_200_OK)
+        except:
+            return Response({"message": "イベントの読み込みに失敗しました"}, status.HTTP_400_BAD_REQUEST)
 
 
 class GetPaysAPIView(views.APIView):
