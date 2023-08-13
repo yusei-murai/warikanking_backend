@@ -79,7 +79,7 @@ class ConfirmEventAPIView(views.APIView):
             return Response({"message": str(e)}, status.HTTP_400_BAD_REQUEST)
 
 
-class AddUserEventAPIView(views.APIView):
+class AddUsersEventAPIView(views.APIView):
     throttle_classes = [RateThrottel]
     throttle_scope = 'create_rate'
     authentication_classes = [JWTAuthentication]
