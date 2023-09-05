@@ -16,12 +16,11 @@ django-extra-views==0.14.0
 django-imagekit==4.0.2
 django-inplaceedit==1.4.1
 django-ipware==3.0.7
-django-summernote==0.8.20.0
 django-widget-tweaks==1.4.8
 djangorestframework==3.13.1
 django-redis==5.2.0
 dj-rest-auth==3.0.0
-djoser==2.1.0
+djoser
 idna==3.2
 mysqlclient==2.0.3
 numpy

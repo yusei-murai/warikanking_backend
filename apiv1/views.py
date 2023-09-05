@@ -468,3 +468,15 @@ class GetUsersDictByEventIdAPIView(views.APIView):
 
         except ValueError as e:
             return Response({"message": e}, status.HTTP_400_BAD_REQUEST)
+        
+
+class GetUserAPIView(views.APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        user = {
+            'id': request.user.id,
+            'name': request.user.name,
+            'email': request.user.email,
+        }
+        return Response(user, status=status.HTTP_200_OK)

@@ -6,7 +6,7 @@ app_name = 'apiv1'
 
 urlpatterns = [
     path('events/', views.CreateEventAPIView.as_view(), name="create-event"),
-    path('events/<str:event_id>/', views.GetEvent.as_view(), name="get-event"),
+    path('events/<str:event_id>/', views.GetEventAPIView.as_view(), name="get-event"),
     path('events/<str:event_id>/users/', views.GetUsersDictByEventIdAPIView.as_view(), name="get-users"),
     path('events/<str:event_id>/users/', views.AddUsersEventAPIView.as_view(), name="add-users"),
     path('events/<str:event_id>/pays/', views.GetPaysAPIView.as_view(), name="get-pays"),
@@ -19,4 +19,5 @@ urlpatterns = [
     path('qr/', views.ReadQrAPIView.as_view(), name="read-qr"),
     path('friends/', views.RequestFriendAPIView.as_view(), name="request-friends"),
     path('friends/<str:friend_id>/approval/', views.ApproveFriendAPIView.as_view(), name="approve-friends"),
+    path('auth/me/', views.GetUserAPIView.as_view(), name="get-user"),
 ]
